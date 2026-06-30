@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0a0b0d;}
+    @keyframes auroraDrift{0%{transform:translate(-5%,-3%) scale(1.1)}50%{transform:translate(5%,4%) scale(1.25)}100%{transform:translate(-5%,-3%) scale(1.1)}}@keyframes sweepDown{0%{transform:translateY(-120%)}100%{transform:translateY(2200px)}}
+    @keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes popIn{0%{transform:scale(.8);opacity:.4}60%{transform:scale(1.12)}100%{transform:scale(1);opacity:1}}
+    @keyframes flipIn{0%{transform:rotateX(-92deg);filter:brightness(1.7)}55%{transform:rotateX(8deg)}100%{transform:rotateX(0)}}
+    @keyframes shakeRow{0%,100%{transform:translateX(0)}20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+    @keyframes winBounce{0%,100%{transform:translateY(0)}30%{transform:translateY(-14px)}55%{transform:translateY(0)}72%{transform:translateY(-6px)}}
+    @keyframes confetti{to{transform:translate(var(--cx),var(--cy)) rotate(var(--cr));opacity:0}}
+  </style>
+</helmet>
+<div ref="{{ rootRef }}" style="min-height:100vh;background:radial-gradient(900px 600px at 50% -12%, rgba(232,185,78,0.10), transparent 60%),#0a0b0d;color:#e7e6e3;font-family:'Space Grotesk',sans-serif;padding:22px 26px 30px;position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:-15%;z-index:0;filter:blur(80px);opacity:0.5;background:radial-gradient(34% 34% at 78% 6%, #e8b94e80, transparent 70%),radial-gradient(30% 30% at 10% 92%, #56c8d644, transparent 70%);animation:auroraDrift 30s ease-in-out infinite;"></div><canvas ref="{{ dustRef }}" style="position:absolute;inset:0;z-index:1;width:100%;height:100%;pointer-events:none;"></canvas><div style="position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0.5;background-image:linear-gradient(rgba(255,255,255,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.022) 1px,transparent 1px);background-size:46px 46px;"></div><div style="position:absolute;left:0;right:0;top:0;height:150px;z-index:1;pointer-events:none;background:linear-gradient(180deg,#e8b94e12,transparent);animation:sweepDown 9s linear infinite;"></div><div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(130% 100% at 50% 40%, transparent 55%, rgba(10,11,13,0.72) 100%);"></div><div style="position:fixed;top:16px;left:16px;width:18px;height:18px;border-left:2px solid #e8b94e66;border-top:2px solid #e8b94e66;z-index:4;pointer-events:none;"></div><div style="position:fixed;top:16px;right:16px;width:18px;height:18px;border-right:2px solid #e8b94e66;border-top:2px solid #e8b94e66;z-index:4;pointer-events:none;"></div><div style="position:fixed;bottom:16px;left:16px;width:18px;height:18px;border-left:2px solid #e8b94e66;border-bottom:2px solid #e8b94e66;z-index:4;pointer-events:none;"></div><div style="position:fixed;bottom:16px;right:16px;width:18px;height:18px;border-right:2px solid #e8b94e66;border-bottom:2px solid #e8b94e66;z-index:4;pointer-events:none;"></div>
+
+  <header style="position:relative;z-index:5;display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.07);max-width:440px;margin:0 auto;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="games.html" style="text-decoration:none;color:#9b9da2;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:1px;border:1px solid rgba(255,255,255,0.12);padding:8px 12px;border-radius:9px;">← ARCADE</a>
+      <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px;letter-spacing:2px;">WORDLE</div>
+    </div>
+    <div style="display:flex;gap:14px;align-items:center;">
+      <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;color:#e8b94e;">🔥 {{ streak }}</div>
+      <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;color:#7b7d82;">BEST {{ best }}</div>
+    </div>
+  </header>
+
+  <main style="position:relative;z-index:5;max-width:440px;margin:0 auto;padding-top:12px;text-align:center;">
+    <div style="display:inline-flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:#7b7d82;margin-bottom:14px;border:1px solid rgba(255,255,255,0.1);padding:5px 12px;border-radius:20px;">
+      <span style="width:6px;height:6px;border-radius:50%;background:#e8b94e;box-shadow:0 0 8px #e8b94e;"></span>5-LETTER · NARUTO / MK / FIFA / GAMING
+    </div>
+
+    <!-- GRID -->
+    <div ref="{{ gridRef }}" style="position:relative;display:flex;flex-direction:column;gap:7px;align-items:center;margin-bottom:16px;{{ gridAnim }}">
+      <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+        <div style="{{ r.style }}">
+          <sc-for list="{{ r.cells }}" as="c" hint-placeholder-count="5">
+            <div style="{{ c.style }}">{{ c.ch }}</div>
+          </sc-for>
+        </div>
+      </sc-for>
+      <sc-for list="{{ confetti }}" as="c" hint-placeholder-count="0"><div style="{{ c.style }}"></div></sc-for>
+    </div>
+
+    <!-- MESSAGE / RESULT -->
+    <div style="min-height:52px;margin-bottom:8px;">
+      <sc-if value="{{ ended }}" hint-placeholder-val="{{ false }}">
+        <div style="animation:riseIn .35s ease both;">
+          <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:22px;letter-spacing:1px;color:{{ msgColor }};text-shadow:0 0 22px {{ msgColor }};">{{ resultBanner }}</div>
+          <div style="font-size:12.5px;color:#9b9da2;margin-top:4px;"><span style="font-family:'Chakra Petch';font-weight:700;color:#e8b94e;letter-spacing:1px;">{{ answer }}</span> — {{ hint }}</div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ showFlash }}" hint-placeholder-val="{{ false }}">
+        <div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:15px;color:#e8b94e;animation:riseIn .25s ease both;padding-top:14px;">{{ flashMsg }}</div>
+      </sc-if>
+    </div>
+
+    <!-- KEYBOARD -->
+    <sc-if value="{{ playing }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:center;">
+        <sc-for list="{{ keyRows }}" as="kr" hint-placeholder-count="3">
+          <div style="display:flex;gap:5px;justify-content:center;">
+            <sc-for list="{{ kr.keys }}" as="k" hint-placeholder-count="9">
+              <button onClick="{{ k.onPress }}" style="{{ k.style }}">{{ k.label }}</button>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <!-- NEXT -->
+    <sc-if value="{{ ended }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ onNext }}" style="margin-top:6px;font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:15px;letter-spacing:1px;color:#070608;background:#e8b94e;border:none;padding:14px 32px;border-radius:12px;cursor:pointer;box-shadow:0 0 26px rgba(232,185,78,0.4);">Next word →</button>
+    </sc-if>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:500,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  WORDS = [
+    ["NINJA","a shinobi of the Hidden Leaf"],["KUNAI","Naruto's throwing blade"],["FATAL","as in FATALITY — finish him"],
+    ["COMBO","a chained string of hits"],["MESSI","8-time Ballon d'Or winner"],["GOALS","what wins you the match"],
+    ["PITCH","the football battlefield"],["BLOCK","defend against the strike"],["LEVEL","what you grind to climb"],
+    ["QUEST","the journey you accept"],["PIXEL","the atom of retro games"],["ARENA","where champions clash"],
+    ["SWORD","Sasuke's blade of choice"],["SLASH","a clean cutting strike"],["DODGE","evade before it lands"],
+    ["ROUND","one bout of the fight"],["FIGHT","what the announcer yells"],["POWER","fill the meter to strike"],
+    ["MAGIC","ninjutsu by another name"],["RAIDS","co-op endgame battles"],
+  ];
+  state = { idx:this.rnd(), guesses:[], current:"", row:0, status:"play", streak:this.read(), best:this.readBest(), flash:"", shake:false, frame:0 };
+  confetti=[]; uid=1; _timers=[];
+
+  read(){ try { return parseInt(localStorage.getItem("him_wordle_streak"))||0; } catch(e){ return 0; } }
+  readBest(){ try { return parseInt(localStorage.getItem("him_wordle_best"))||0; } catch(e){ return 0; } }
+  rnd(){ return Math.floor(Math.random()*this.WORDS.length); }
+  answer(){ return this.WORDS[this.state.idx][0]; }
+  hint(){ return this.WORDS[this.state.idx][1]; }
+  after(ms,fn){ const id=setTimeout(fn,ms); this._timers.push(id); return id; }
+  now(){return Date.now();}
+
+  componentDidMount(){
+    this._kh=(e)=>{
+      if(this.state.status!=="play")return;
+      const k=e.key.toUpperCase();
+      if(k==="ENTER")this.submit();
+      else if(k==="BACKSPACE")this.del();
+      else if(/^[A-Z]$/.test(k))this.add(k);
+    };
+    addEventListener("keydown",this._kh);
+    this.startDust();
+    this._loop=setInterval(()=>{ const t=this.now(); const b=this.confetti.length; this.confetti=this.confetti.filter(c=>t-c.born<1400); if(this.confetti.length!==b) this.setState(s=>({frame:s.frame+1})); },80);
+  }
+  componentWillUnmount(){ removeEventListener("keydown",this._kh); cancelAnimationFrame(this._d); removeEventListener("resize",this._onR); clearInterval(this._loop); this._timers.forEach(clearTimeout); }
+
+  add(ch){ if(this.state.current.length<5) this.setState({current:this.state.current+ch,flash:""}); }
+  del(){ this.setState({current:this.state.current.slice(0,-1),flash:""}); }
+
+  submit(){
+    if(this.state.current.length<5){ this.doShake(); this.setState({flash:"Need 5 letters"}); return; }
+    const guess=this.state.current;
+    const guesses=[...this.state.guesses,guess];
+    const won=guess===this.answer();
+    const lost=!won && guesses.length>=6;
+    let streak=this.state.streak, best=this.state.best, status="play";
+    if(won){ status="won"; streak+=1; if(streak>best){best=streak; try{localStorage.setItem("him_wordle_best",String(best));}catch(e){}} try{localStorage.setItem("him_wordle_streak",String(streak));}catch(e){}
+      this.after(380,()=>this.celebrate()); }
+    else if(lost){ status="lost"; streak=0; try{localStorage.setItem("him_wordle_streak","0");}catch(e){} this.doShake(); }
+    this.setState({ guesses, current:"", row:this.state.row+1, status, streak, best, flash:"" });
+  }
+
+  doShake(){ this.setState({shake:true}); this.after(380,()=>this.setState({shake:false})); }
+  celebrate(){
+    const cols=["#5fbf8e","#56c8d6","#e8b94e","#fff","#e8792e"];
+    for(let i=0;i<40;i++){ this.confetti.push({id:this.uid++, x:20+Math.random()*60, y:30+Math.random()*40, cx:(Math.random()*160-80)+"px", cy:(140+Math.random()*120)+"px", cr:(Math.random()*720-360)+"deg", color:cols[(Math.random()*cols.length)|0], born:this.now()}); }
+    const g=this._grid; if(g){ g.style.animation="none"; void g.offsetWidth; g.style.animation="winBounce .7s ease"; }
+    this.setState(s=>({frame:s.frame+1}));
+  }
+
+  next(){ this.confetti=[]; this.setState({ idx:this.rnd(), guesses:[], current:"", row:0, status:"play", flash:"" }); }
+
+  score(guess){
+    const ans=this.answer().split(""), res=Array(5).fill("absent"), used=Array(5).fill(false);
+    for(let i=0;i<5;i++){ if(guess[i]===ans[i]){ res[i]="correct"; used[i]=true; } }
+    for(let i=0;i<5;i++){ if(res[i]==="correct")continue;
+      for(let j=0;j<5;j++){ if(!used[j]&&guess[i]===ans[j]){ res[i]="present"; used[j]=true; break; } } }
+    return res;
+  }
+
+  cellStyle(state,flipIdx,isCurrentRow,justSubmitted){
+    const base="width:58px;height:58px;display:flex;align-items:center;justify-content:center;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:26px;border-radius:9px;";
+    const flip = justSubmitted? `animation:flipIn .5s ease both;animation-delay:${flipIdx*0.11}s;` : "";
+    if(state==="correct")return base+flip+"background:#5fbf8e;color:#04140c;border:2px solid #5fbf8e;box-shadow:0 0 16px rgba(95,191,142,0.45);";
+    if(state==="present")return base+flip+"background:#e8b94e;color:#1a1304;border:2px solid #e8b94e;box-shadow:0 0 16px rgba(232,185,78,0.4);";
+    if(state==="absent") return base+flip+"background:rgba(255,255,255,0.04);color:#7b7d82;border:2px solid rgba(255,255,255,0.08);";
+    if(state==="filled") return base+"animation:popIn .15s ease;background:rgba(255,255,255,0.03);color:#e7e6e3;border:2px solid rgba(255,255,255,0.28);";
+    return base+"background:rgba(255,255,255,0.02);color:#e7e6e3;border:2px solid rgba(255,255,255,0.07);";
+  }
+
+  startDust(){
+    const cv=this._dust; if(!cv)return;
+    const ctx=cv.getContext("2d"); const dpr=window.devicePixelRatio||1;
+    const resize=()=>{ cv.width=cv.clientWidth*dpr; cv.height=cv.clientHeight*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); };
+    resize(); this._onR=resize; addEventListener("resize",resize);
+    const cols=["#e8a06a","#7ad4df","#ffffff"]; const P=[];
+    for(let i=0;i<30;i++) P.push({x:Math.random(),y:Math.random(),r:0.6+Math.random()*1.4,sp:0.015+Math.random()*0.04,a:0.06+Math.random()*0.26,ph:Math.random()*6,c:cols[(Math.random()*cols.length)|0]});
+    const draw=()=>{
+      const w=cv.clientWidth,h=cv.clientHeight; ctx.clearRect(0,0,w,h);
+      for(const p of P){ p.y-=p.sp/100; if(p.y<-0.05){p.y=1.05;p.x=Math.random();} p.ph+=0.01;
+        const x=p.x*w+Math.sin(p.ph)*7, y=p.y*h;
+        ctx.globalAlpha=p.a*(0.5+0.5*Math.sin(p.ph)); ctx.fillStyle=p.c;
+        ctx.beginPath(); ctx.arc(x,y,p.r,0,7); ctx.fill(); }
+      ctx.globalAlpha=1; this._d=requestAnimationFrame(draw);
+    };
+    this._d=requestAnimationFrame(draw);
+  }
+
+  renderVals(){
+    const lastRow=this.state.guesses.length-1;
+    const rows=[];
+    for(let r=0;r<6;r++){
+      const cells=[];
+      if(r<this.state.guesses.length){
+        const g=this.state.guesses[r], sc=this.score(g);
+        const justSubmitted = r===lastRow;
+        for(let i=0;i<5;i++) cells.push({ch:g[i],style:this.cellStyle(sc[i],i,false,justSubmitted)});
+      } else if(r===this.state.row && this.state.status==="play"){
+        const cur=this.state.current;
+        for(let i=0;i<5;i++) cells.push({ch:cur[i]||"",style:this.cellStyle(cur[i]?"filled":"empty")});
+      } else {
+        for(let i=0;i<5;i++) cells.push({ch:"",style:this.cellStyle("empty")});
+      }
+      rows.push({ cells, style:`display:flex;gap:7px;${this.state.shake&&r===this.state.row?'animation:shakeRow .38s;':''}` });
+    }
+
+    const letterState={};
+    for(const g of this.state.guesses){ const sc=this.score(g);
+      for(let i=0;i<5;i++){ const ch=g[i], s=sc[i], prev=letterState[ch];
+        if(s==="correct"||prev==="correct"){letterState[ch]="correct";}
+        else if(s==="present"||prev==="present"){letterState[ch]="present";}
+        else letterState[ch]="absent"; } }
+    const kbStyle=(label)=>{
+      const wide=label==="ENT"||label==="DEL";
+      const st=letterState[label];
+      let bg="rgba(255,255,255,0.07)",col="#e7e6e3";
+      if(st==="correct"){bg="#5fbf8e";col="#04140c";}
+      else if(st==="present"){bg="#e8b94e";col="#1a1304";}
+      else if(st==="absent"){bg="rgba(255,255,255,0.025)";col="#5a5c60";}
+      return `min-width:${wide?'48px':'30px'};height:48px;padding:0 ${wide?'10px':'4px'};font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:${wide?'11px':'15px'};letter-spacing:${wide?'1px':'0'};color:${col};background:${bg};border:none;border-radius:7px;cursor:pointer;transition:all .15s ease;`;
+    };
+    const mkKey=(label)=>({ label, style:kbStyle(label), onPress:()=>{ if(label==="ENT")this.submit(); else if(label==="DEL")this.del(); else this.add(label); } });
+    const keyRows=[
+      { keys:"QWERTYUIOP".split("").map(mkKey) },
+      { keys:"ASDFGHJKL".split("").map(mkKey) },
+      { keys:[mkKey("ENT"),..."ZXCVBNM".split("").map(mkKey),mkKey("DEL")] },
+    ];
+
+    const won=this.state.status==="won", lost=this.state.status==="lost";
+    const banners=["GENIUS","MAGNIFICENT","IMPRESSIVE","SOLID","PHEW","CLUTCH"];
+    const tries=this.state.guesses.length;
+    const confetti=this.confetti.map(c=>({id:c.id,style:`position:absolute;left:${c.x}%;top:${c.y}%;width:8px;height:10px;background:${c.color};z-index:14;--cx:${c.cx};--cy:${c.cy};--cr:${c.cr};animation:confetti 1.4s ease-in forwards;pointer-events:none;border-radius:1px;`}));
+
+    return {
+      rootRef:(el)=>{this._root=el;}, dustRef:(el)=>{this._dust=el;}, gridRef:(el)=>{this._grid=el;},
+      streak:this.state.streak, best:this.state.best,
+      rows, keyRows, confetti,
+      playing:this.state.status==="play", ended:won||lost,
+      showFlash:!!this.state.flash && this.state.status==="play", flashMsg:this.state.flash,
+      resultBanner: won?(banners[Math.min(5,tries-1)]||"SOLVED"):"OUT OF TRIES",
+      msgColor: won?"#5fbf8e":"#d44a6a",
+      answer:this.answer(), hint:this.hint(),
+      onNext:()=>this.next(),
+    };
+  }
+}
+</script>
+</body>
+</html>
