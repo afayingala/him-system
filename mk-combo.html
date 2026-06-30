@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0a0b0d;}
+    @keyframes auroraDrift{0%{transform:translate(-5%,-3%) scale(1.1)}50%{transform:translate(5%,4%) scale(1.25)}100%{transform:translate(-5%,-3%) scale(1.1)}}@keyframes sweepDown{0%{transform:translateY(-120%)}100%{transform:translateY(2200px)}}
+    @keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes shake{0%,100%{transform:translate(0,0)}15%{transform:translate(-7px,3px)}30%{transform:translate(7px,-3px)}45%{transform:translate(-6px,-2px)}60%{transform:translate(6px,2px)}80%{transform:translate(-3px,1px)}}
+    @keyframes idleBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+    @keyframes boomRing{0%{opacity:.95;transform:translate(-50%,-50%) scale(.2)}100%{opacity:0;transform:translate(-50%,-50%) scale(1)}}
+    @keyframes spark{to{transform:translate(var(--tx),var(--ty)) scale(.3);opacity:0}}
+    @keyframes floatUp{0%{opacity:0;transform:translate(-50%,0) scale(.7)}18%{opacity:1;transform:translate(-50%,-8px) scale(1.15)}100%{opacity:0;transform:translate(-50%,-40px) scale(.95)}}
+    @keyframes announceIn{0%{opacity:0;transform:translate(-50%,-50%) scale(2.2)}30%{opacity:1;transform:translate(-50%,-50%) scale(1)}80%{opacity:1;transform:translate(-50%,-50%) scale(1)}100%{opacity:0;transform:translate(-50%,-50%) scale(1.1)}}
+    @keyframes blockPulse{0%,100%{box-shadow:0 0 0 rgba(86,200,214,0)}50%{box-shadow:0 0 26px rgba(86,200,214,0.9)}}
+    @keyframes fatalFlash{0%{opacity:0}10%{opacity:.85}100%{opacity:0}}
+  </style>
+</helmet>
+<div ref="{{ rootRef }}" style="min-height:100vh;background:radial-gradient(1000px 600px at 50% -12%, rgba(212,74,106,0.13), transparent 60%),#0a0b0d;color:#e7e6e3;font-family:'Space Grotesk',sans-serif;padding:22px 26px 30px;position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:-15%;z-index:0;filter:blur(80px);opacity:0.5;background:radial-gradient(34% 34% at 78% 6%, #d44a6a80, transparent 70%),radial-gradient(30% 30% at 10% 92%, #e8792e44, transparent 70%);animation:auroraDrift 30s ease-in-out infinite;"></div><canvas ref="{{ dustRef }}" style="position:absolute;inset:0;z-index:1;width:100%;height:100%;pointer-events:none;"></canvas><div style="position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0.5;background-image:linear-gradient(rgba(255,255,255,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.022) 1px,transparent 1px);background-size:46px 46px;"></div><div style="position:absolute;left:0;right:0;top:0;height:150px;z-index:1;pointer-events:none;background:linear-gradient(180deg,#d44a6a12,transparent);animation:sweepDown 9s linear infinite;"></div><div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(130% 100% at 50% 40%, transparent 55%, rgba(10,11,13,0.72) 100%);"></div><div style="position:fixed;top:16px;left:16px;width:18px;height:18px;border-left:2px solid #d44a6a66;border-top:2px solid #d44a6a66;z-index:4;pointer-events:none;"></div><div style="position:fixed;top:16px;right:16px;width:18px;height:18px;border-right:2px solid #d44a6a66;border-top:2px solid #d44a6a66;z-index:4;pointer-events:none;"></div><div style="position:fixed;bottom:16px;left:16px;width:18px;height:18px;border-left:2px solid #d44a6a66;border-bottom:2px solid #d44a6a66;z-index:4;pointer-events:none;"></div><div style="position:fixed;bottom:16px;right:16px;width:18px;height:18px;border-right:2px solid #d44a6a66;border-bottom:2px solid #d44a6a66;z-index:4;pointer-events:none;"></div>
+
+  <header style="position:relative;z-index:5;display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.07);max-width:720px;margin:0 auto;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="games.html" style="text-decoration:none;color:#9b9da2;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:1px;border:1px solid rgba(255,255,255,0.12);padding:8px 12px;border-radius:9px;">← ARCADE</a>
+      <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px;letter-spacing:2px;">MK COMBO</div>
+    </div>
+    <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;color:#d44a6a;">BEST · {{ best }} STREAK</div>
+  </header>
+
+  <main style="position:relative;z-index:5;max-width:720px;margin:0 auto;padding-top:14px;">
+
+    <!-- HEALTH BARS -->
+    <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:10px;">
+      <div style="flex:1;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+          <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;letter-spacing:1.5px;color:#7ad4df;">SUB-ZERO</span>
+          <div style="display:flex;gap:4px;"><sc-for list="{{ youPips }}" as="p" hint-placeholder-count="2"><div style="{{ p.style }}"></div></sc-for></div>
+        </div>
+        <div style="height:18px;border:2px solid rgba(255,255,255,0.18);border-radius:5px;background:rgba(0,0,0,0.5);overflow:hidden;position:relative;display:flex;justify-content:flex-end;">
+          <div style="height:100%;width:{{ youHpPct }};background:{{ youHpColor }};transition:width .25s ease;box-shadow:0 0 12px {{ youHpColor }};"></div>
+          <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,transparent 0 9.9%,rgba(0,0,0,0.35) 9.9% 10%);pointer-events:none;"></div>
+        </div>
+      </div>
+      <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:26px;color:{{ timerColor }};min-width:42px;text-align:center;padding-top:6px;">{{ roundTimer }}</div>
+      <div style="flex:1;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;">
+          <div style="display:flex;gap:4px;"><sc-for list="{{ foePips }}" as="p" hint-placeholder-count="2"><div style="{{ p.style }}"></div></sc-for></div>
+          <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;letter-spacing:1.5px;color:#ffb56b;">SCORPION</span>
+        </div>
+        <div style="height:18px;border:2px solid rgba(255,255,255,0.18);border-radius:5px;background:rgba(0,0,0,0.5);overflow:hidden;position:relative;">
+          <div style="height:100%;width:{{ foeHpPct }};background:{{ foeHpColor }};transition:width .25s ease;box-shadow:0 0 12px {{ foeHpColor }};"></div>
+          <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,transparent 0 9.9%,rgba(0,0,0,0.35) 9.9% 10%);pointer-events:none;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAGE -->
+    <div style="position:relative;width:100%;height:330px;border-radius:14px;overflow:hidden;border:2px solid rgba(255,255,255,0.1);background:linear-gradient(180deg,#1a0e16 0%,#241019 40%,#2a121a 70%,#160a10 100%);box-shadow:inset 0 0 70px rgba(0,0,0,0.7);">
+      <div style="position:absolute;inset:0;opacity:0.5;background:radial-gradient(60% 50% at 50% 18%, rgba(232,121,46,0.16), transparent 70%);pointer-events:none;"></div>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:64px;background:linear-gradient(180deg,#3a1d14,#0f0a09);border-top:2px solid rgba(232,121,46,0.25);pointer-events:none;"></div>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:64px;opacity:0.25;background-image:repeating-linear-gradient(90deg,transparent 0 38px,rgba(0,0,0,0.5) 38px 40px);pointer-events:none;"></div>
+
+      <!-- YOU fighter -->
+      <div style="{{ youWrap }}">
+        <div style="position:relative;width:64px;height:118px;">
+          <div style="position:absolute;bottom:0;left:14px;width:12px;height:40px;background:linear-gradient(180deg,#2a6d78,#16404a);border-radius:6px;transform:rotate(-13deg);"></div>
+          <div style="position:absolute;bottom:0;left:40px;width:12px;height:42px;background:linear-gradient(180deg,#2a6d78,#16404a);border-radius:6px;transform:rotate(12deg);"></div>
+          <div style="position:absolute;bottom:36px;left:18px;width:30px;height:46px;background:linear-gradient(180deg,#338a9a,#1d5560);border-radius:11px 11px 7px 7px;border:1px solid #56c8d6aa;"></div>
+          <div style="position:absolute;bottom:36px;left:18px;width:30px;height:7px;background:#56c8d6;border-radius:4px;box-shadow:0 0 8px #56c8d6;"></div>
+          <div style="position:absolute;bottom:60px;left:10px;width:10px;height:30px;background:linear-gradient(180deg,#2a6d78,#16404a);border-radius:6px;transform:rotate(24deg);"></div>
+          <div style="position:absolute;bottom:58px;left:46px;width:10px;height:32px;background:linear-gradient(180deg,#338a9a,#1d5560);border-radius:6px;transform:rotate(-28deg);"></div>
+          <div style="position:absolute;bottom:52px;left:52px;width:11px;height:11px;border-radius:50%;background:#7ad4df;box-shadow:0 0 10px #56c8d6;"></div>
+          <div style="position:absolute;bottom:82px;left:21px;width:25px;height:25px;border-radius:50%;background:radial-gradient(circle at 60% 40%,#7ad4df,#2a6d78);border:1px solid #56c8d6;"></div>
+          <div style="position:absolute;bottom:90px;left:34px;width:11px;height:5px;background:#0a1518;border-radius:2px;"></div>
+          <div style="position:absolute;inset:0;border-radius:12px;background:{{ youFlashColor }};opacity:{{ youFlash }};transition:opacity .12s ease;mix-blend-mode:screen;pointer-events:none;"></div>
+        </div>
+      </div>
+
+      <!-- FOE fighter -->
+      <div style="{{ foeWrap }}">
+        <div style="position:relative;width:64px;height:118px;transform:scaleX(-1);">
+          <div style="position:absolute;bottom:0;left:14px;width:12px;height:40px;background:linear-gradient(180deg,#9e4a2a,#5a2414);border-radius:6px;transform:rotate(-13deg);"></div>
+          <div style="position:absolute;bottom:0;left:40px;width:12px;height:42px;background:linear-gradient(180deg,#9e4a2a,#5a2414);border-radius:6px;transform:rotate(12deg);"></div>
+          <div style="position:absolute;bottom:36px;left:18px;width:30px;height:46px;background:linear-gradient(180deg,#c4632e,#7a3318);border-radius:11px 11px 7px 7px;border:1px solid #e8792eaa;"></div>
+          <div style="position:absolute;bottom:36px;left:18px;width:30px;height:7px;background:#e8792e;border-radius:4px;box-shadow:0 0 8px #e8792e;"></div>
+          <div style="position:absolute;bottom:60px;left:10px;width:10px;height:30px;background:linear-gradient(180deg,#9e4a2a,#5a2414);border-radius:6px;transform:rotate(24deg);"></div>
+          <div style="position:absolute;bottom:58px;left:46px;width:10px;height:32px;background:linear-gradient(180deg,#c4632e,#7a3318);border-radius:6px;transform:rotate(-28deg);"></div>
+          <div style="position:absolute;bottom:52px;left:52px;width:11px;height:11px;border-radius:50%;background:#ffb56b;box-shadow:0 0 10px #e8792e;"></div>
+          <div style="position:absolute;bottom:82px;left:21px;width:25px;height:25px;border-radius:50%;background:radial-gradient(circle at 60% 40%,#ffb56b,#9e4a2a);border:1px solid #e8792e;"></div>
+          <div style="position:absolute;bottom:90px;left:34px;width:11px;height:5px;background:#1a0a04;border-radius:2px;"></div>
+          <div style="position:absolute;inset:0;border-radius:12px;background:{{ foeFlashColor }};opacity:{{ foeFlash }};transition:opacity .12s ease;mix-blend-mode:screen;pointer-events:none;"></div>
+        </div>
+      </div>
+
+      <!-- BOOMS / SPARKS -->
+      <sc-for list="{{ booms }}" as="b" hint-placeholder-count="0"><div style="{{ b.style }}"></div></sc-for>
+      <sc-for list="{{ parts }}" as="p" hint-placeholder-count="0"><div style="{{ p.style }}"></div></sc-for>
+      <sc-for list="{{ floaters }}" as="f" hint-placeholder-count="0"><div style="{{ f.style }}">{{ f.text }}</div></sc-for>
+
+      <!-- ANNOUNCER -->
+      <sc-if value="{{ showAnnounce }}" hint-placeholder-val="{{ false }}">
+        <div key="{{ announceKey }}" style="position:absolute;left:50%;top:42%;z-index:15;text-align:center;pointer-events:none;animation:announceIn {{ announceDur }} ease-out forwards;">
+          <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:{{ announceSize }};letter-spacing:2px;color:{{ announceColor }};text-shadow:0 0 30px {{ announceColor }},0 3px 8px rgba(0,0,0,0.8);">{{ announceText }}</div>
+          <sc-if value="{{ announceSub }}" hint-placeholder-val="{{ false }}"><div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:2px;color:#cfd0d2;margin-top:6px;">{{ announceSubText }}</div></sc-if>
+        </div>
+      </sc-if>
+
+      <!-- FATAL FLASH -->
+      <sc-if value="{{ fatalFlash }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;z-index:14;background:#d44a6a;animation:fatalFlash .9s ease-out forwards;pointer-events:none;"></div></sc-if>
+
+      <!-- MATCH OVER -->
+      <sc-if value="{{ matchOver }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:20;background:rgba(8,7,12,0.8);backdrop-filter:blur(6px);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:riseIn .4s ease both;">
+          <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:42px;letter-spacing:2px;color:{{ resultColor }};text-shadow:0 0 34px {{ resultColor }};">{{ resultText }}</div>
+          <div style="font-family:'Space Mono',monospace;font-size:13px;color:#9b9da2;margin-top:10px;">{{ resultSub }}</div>
+          <div style="font-family:'Space Mono',monospace;font-size:12px;color:#56c8d6;margin-top:8px;">{{ bestLine }}</div>
+          <button onClick="{{ onRestart }}" style="margin-top:20px;font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:15px;letter-spacing:1px;color:#070608;background:#d44a6a;border:none;padding:13px 30px;border-radius:12px;cursor:pointer;box-shadow:0 0 26px rgba(212,74,106,0.5);">{{ restartLabel }}</button>
+        </div>
+      </sc-if>
+    </div>
+
+    <!-- COMBO PROMPT / DEFEND METER -->
+    <div style="height:54px;margin-top:12px;display:flex;align-items:center;justify-content:center;">
+      <sc-if value="{{ inAttack }}" hint-placeholder-val="{{ true }}">
+        <div style="width:100%;">
+          <div style="display:flex;gap:7px;justify-content:center;margin-bottom:8px;">
+            <sc-for list="{{ comboView }}" as="c" hint-placeholder-count="4"><div style="{{ c.style }}">{{ c.label }}</div></sc-for>
+          </div>
+          <div style="height:6px;border-radius:5px;background:rgba(255,255,255,0.07);overflow:hidden;max-width:420px;margin:0 auto;">
+            <div style="height:100%;width:{{ atkBarPct }};background:linear-gradient(90deg,#5fbf8e,#e8b94e,#d44a6a);transition:width .08s linear;"></div>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ inDefend }}" hint-placeholder-val="{{ false }}">
+        <div style="width:100%;max-width:440px;">
+          <div style="text-align:center;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;letter-spacing:2px;color:#56c8d6;margin-bottom:7px;">⛨ BLOCK WHEN IT HITS THE ZONE</div>
+          <div style="position:relative;height:18px;border-radius:6px;background:rgba(255,255,255,0.06);overflow:hidden;border:1px solid rgba(255,255,255,0.1);">
+            <div style="position:absolute;top:0;bottom:0;left:{{ zoneStart }};width:{{ zoneW }};background:rgba(86,200,214,0.35);border-left:2px solid #56c8d6;border-right:2px solid #56c8d6;"></div>
+            <div style="position:absolute;top:0;bottom:0;left:{{ markerPos }};width:3px;background:#fff;box-shadow:0 0 10px #fff;transition:left .08s linear;"></div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+
+    <!-- INPUT PAD -->
+    <div style="display:flex;gap:10px;margin-top:10px;align-items:stretch;justify-content:center;">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;flex:1;max-width:480px;">
+        <sc-for list="{{ buttons }}" as="b" hint-placeholder-count="4">
+          <button onClick="{{ b.onPress }}" style="{{ b.style }}">
+            <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:22px;line-height:1;">{{ b.label }}</div>
+            <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;opacity:0.7;margin-top:5px;">{{ b.sub }}</div>
+          </button>
+        </sc-for>
+      </div>
+      <button onClick="{{ onBlock }}" style="{{ blockStyle }}">
+        <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px;line-height:1;">⛨</div>
+        <div style="font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1px;opacity:0.8;margin-top:5px;">BLOCK</div>
+      </button>
+    </div>
+    <div style="text-align:center;margin-top:9px;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;color:#6c6e73;">keys · A=FP  S=BP  K=FK  L=BK  SPACE=BLOCK</div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:720,&quot;height&quot;:760}}">
+class Component extends DCLogic {
+  ATK = {
+    FP:{label:"FP",sub:"FRONT PUNCH",dmg:7,color:"#56c8d6",key:"a"},
+    BP:{label:"BP",sub:"BACK PUNCH",dmg:9,color:"#8b7ef0",key:"s"},
+    FK:{label:"FK",sub:"FRONT KICK",dmg:10,color:"#e8b94e",key:"k"},
+    BK:{label:"BK",sub:"BACK KICK",dmg:13,color:"#e8792e",key:"l"},
+  };
+  ORDER = ["FP","BP","FK","BK"];
+
+  state = { frame:0, best:this.read() };
+
+  youHP=100; foeHP=100; round=1; youWins=0; foeWins=0;
+  phase="intro"; // intro|attack|defend|roundEnd|finish|matchOver
+  combo=[]; comboIdx=0; atkStart=0; atkEnd=0;
+  defStart=0; defEnd=0; defResolved=false; defBlocked=false; defDmg=0; defZone=[78,92];
+  youPose="idle"; foePose="idle"; youPoseUntil=0; foePoseUntil=0;
+  youFlash=0; foeFlash=0; youFlashCol="#d44a6a"; foeFlashCol="#d44a6a";
+  booms=[]; parts=[]; floaters=[]; uid=1;
+  announce=null; fatalFlash=false; matchResult=null; isNew=false; streak=0;
+  roundStart=0; ROUND_TIME=60;
+  _timers=[];
+
+  read(){ try { return parseInt(localStorage.getItem("him_mkcombo_streak"))||0; } catch(e){ return 0; } }
+
+  componentDidMount(){
+    this._loop=setInterval(()=>this.tick(),50);
+    this._kh=(e)=>{
+      const k=e.key.toLowerCase();
+      if(k===" "||e.code==="Space"){ e.preventDefault(); this.block(); return; }
+      const mv=this.ORDER.find(m=>this.ATK[m].key===k);
+      if(mv) this.press(mv);
+    };
+    addEventListener("keydown",this._kh);
+    this.startDust();
+    this.after(500,()=>this.startMatch());
+  }
+  componentWillUnmount(){ clearInterval(this._loop); cancelAnimationFrame(this._d); removeEventListener("resize",this._onR); removeEventListener("keydown",this._kh); this._timers.forEach(clearTimeout); }
+
+  after(ms,fn){ const id=setTimeout(()=>{ fn(); },ms); this._timers.push(id); return id; }
+  now(){ return Date.now(); }
+
+  setAnnounce(text,color,sub,dur,size){ this.announce={text,color,sub:sub||"",dur:dur||1200,size:size||"38px",key:this.uid++}; }
+  shake(){ const r=this._root; if(!r)return; r.style.animation="none"; void r.offsetWidth; r.style.animation="shake .34s"; }
+  setPose(who,pose,ms,flashCol){
+    if(who==="you"){ this.youPose=pose; this.youPoseUntil=this.now()+(ms||220); if(flashCol){this.youFlash=0.7;this.youFlashCol=flashCol;} }
+    else { this.foePose=pose; this.foePoseUntil=this.now()+(ms||220); if(flashCol){this.foeFlash=0.7;this.foeFlashCol=flashCol;} }
+  }
+  addBoom(x,y,color,size){ this.booms.push({id:this.uid++,x,y,color,size,born:this.now()}); }
+  addSparks(x,y,color,n){ for(let i=0;i<(n||7);i++){ const a=Math.random()*6.28,d=10+Math.random()*26; this.parts.push({id:this.uid++,x,y,tx:Math.cos(a)*d,ty:Math.sin(a)*d,color,born:this.now()}); } }
+  addFloater(x,y,text,color){ this.floaters.push({id:this.uid++,x,y,text,color,born:this.now()}); }
+
+  startMatch(){
+    this.youWins=0; this.foeWins=0; this.round=1; this.matchResult=null; this.isNew=false;
+    this.startRound();
+  }
+  startRound(){
+    this.youHP=100; this.foeHP=100; this.combo=[]; this.comboIdx=0;
+    this.youPose="idle"; this.foePose="idle"; this.phase="intro";
+    this.setAnnounce("ROUND "+this.round,"#e8b94e","",900,"40px");
+    this.after(950,()=>{ this.setAnnounce("FIGHT!","#5fbf8e","",700,"54px"); this.roundStart=this.now(); this.beginAttack(); });
+    this.setState(s=>({frame:s.frame+1}));
+  }
+
+  comboLen(){ return 3+Math.min(this.round-1,3); }
+  genCombo(){ const L=this.comboLen(); const a=[]; for(let i=0;i<L;i++) a.push(this.ORDER[(Math.random()*4)|0]); return a; }
+
+  beginAttack(){
+    this.phase="attack"; this.combo=this.genCombo(); this.comboIdx=0;
+    this.atkStart=this.now(); this.atkEnd=this.now()+this.combo.length*820;
+    this.setState(s=>({frame:s.frame+1}));
+  }
+
+  press(mv){
+    if(this.phase!=="attack" && this.phase!=="finish"){ return; }
+    if(this.phase==="finish"){ this.finisherPress(mv); return; }
+    const expect=this.combo[this.comboIdx];
+    if(mv===expect){
+      const dmg=this.ATK[mv].dmg;
+      this.foeHP=Math.max(0,this.foeHP-dmg);
+      this.setPose("you","attack",170); this.setPose("foe","hit",200,"#d44a6a");
+      this.addBoom(72,52,"#fff",30); this.addSparks(72,50,this.ATK[mv].color,7);
+      this.addFloater(78,40,"-"+dmg,"#f5b8c6"); this.shake();
+      this.comboIdx++; this.atkEnd+=160;
+      if(this.foeHP<=0){ this.phase="hitstop"; this.after(220,()=>this.roundWin("you")); this.setState(s=>({frame:s.frame+1})); return; }
+      if(this.comboIdx>=this.combo.length){ this.comboComplete(); }
+    } else {
+      this.comboFail();
+    }
+    this.setState(s=>({frame:s.frame+1}));
+  }
+
+  comboComplete(){
+    const L=this.combo.length;
+    const names={3:"TRIPLE COMBO",4:"4-HIT COMBO!",5:"BRUTAL!",6:"FLAWLESS COMBO!"};
+    this.setAnnounce(names[L]||"COMBO!","#e8b94e","",1000,"34px");
+    this.setPose("foe","hit",420,"#d44a6a"); this.addBoom(72,52,"#e8b94e",46); this.shake();
+    this.phase="cooldown";
+    this.after(700,()=>{ if(this.foeHP>0&&this.youHP>0) this.beginDefend(); });
+  }
+  comboFail(){
+    this.setAnnounce("WHIFF!","#d44a6a","they punish",800,"30px");
+    this.phase="cooldown";
+    this.after(550,()=>{ if(this.youHP>0&&this.foeHP>0) this.beginDefend(true); });
+  }
+
+  beginDefend(punish){
+    this.phase="defend"; this.defResolved=false; this.defBlocked=false;
+    const travel=Math.max(900,1500-this.round*120);
+    this.defStart=this.now(); this.defEnd=this.now()+travel;
+    const zw=Math.max(9,16-this.round*1.5); const zs=84-zw;
+    this.defZone=[zs,zs+zw];
+    this.defDmg=(punish?22:16)+this.round*2;
+    this.setPose("foe","attack",travel,null);
+    this.setState(s=>({frame:s.frame+1}));
+  }
+  block(){
+    if(this.phase!=="defend"||this.defResolved) return;
+    const t=this.now(); const prog=(t-this.defStart)/(this.defEnd-this.defStart)*100;
+    if(prog>=this.defZone[0]&&prog<=this.defZone[1]+4){
+      this.defBlocked=true; this.defResolved=true;
+      this.setPose("you","block",420,"#56c8d6"); this.addBoom(20,52,"#56c8d6",30);
+      this.setAnnounce("BLOCKED!","#56c8d6","",700,"30px");
+      this.after(500,()=>this.afterDefend());
+    } else {
+      // early/late mistimed = still take hit on resolve, small penalty: lock
+      this.defResolved=true; this.resolveHit();
+    }
+    this.setState(s=>({frame:s.frame+1}));
+  }
+  resolveHit(){
+    this.youHP=Math.max(0,this.youHP-this.defDmg);
+    this.setPose("foe","attack",200); this.setPose("you","hit",240,"#d44a6a");
+    this.addBoom(20,52,"#fff",34); this.addSparks(20,50,"#d44a6a",9);
+    this.addFloater(20,40,"-"+this.defDmg,"#aef0c8"); this.shake();
+    if(this.youHP<=0){ this.after(220,()=>this.roundWin("foe")); }
+    else this.after(520,()=>this.afterDefend());
+  }
+  afterDefend(){ if(this.youHP>0&&this.foeHP>0&&this.phase==="defend") this.beginAttack(); }
+
+  roundWin(winner){
+    this.phase="roundEnd";
+    const flawless = winner==="you" && this.youHP>=100;
+    if(winner==="you"){ this.youWins++; this.setPose("foe","ko",2000); this.setPose("you","win",2000); }
+    else { this.foeWins++; this.setPose("you","ko",2000); this.setPose("foe","win",2000); }
+    this.addBoom(winner==="you"?78:22,46,winner==="you"?"#5fbf8e":"#d44a6a",60); this.shake();
+    this.setAnnounce(flawless?"FLAWLESS!":"K.O.","#d44a6a","",1300,"52px");
+    this.after(1500,()=>{
+      if(winner==="you"&&this.youWins>=2){ this.beginFinish(); }
+      else if(this.foeWins>=2){ this.endMatch(false); }
+      else { this.round++; this.startRound(); }
+    });
+    this.setState(s=>({frame:s.frame+1}));
+  }
+
+  beginFinish(){
+    this.phase="finish";
+    this.finisher=this.genCombo().slice(0,4); this.combo=this.finisher; this.comboIdx=0;
+    this.finStart=this.now();
+    this.setPose("foe","ko",99999); this.setPose("you","idle",99999);
+    this.setAnnounce("FINISH HIM!","#d44a6a","input the combo",1600,"46px");
+    this.setState(s=>({frame:s.frame+1}));
+  }
+  finisherPress(mv){
+    if(mv===this.combo[this.comboIdx]){
+      this.comboIdx++; this.addBoom(72,52,"#e8b94e",28); this.addSparks(72,50,this.ATK[mv].color,6); this.shake();
+      if(this.comboIdx>=this.combo.length) this.doFatality();
+    } else {
+      // fail finisher -> still victory but plain
+      this.endMatch(true,false);
+    }
+    this.setState(s=>({frame:s.frame+1}));
+  }
+  doFatality(){
+    this.fatalFlash=true; this.shake();
+    this.setAnnounce("FATALITY","#d44a6a","",1600,"56px");
+    this.addBoom(78,50,"#d44a6a",80); this.addSparks(78,50,"#d44a6a",16); this.addSparks(78,50,"#f5b8c6",14);
+    this.setPose("foe","ko",99999);
+    this.after(1200,()=>{ this.fatalFlash=false; this.endMatch(true,true); });
+    this.setState(s=>({frame:s.frame+1}));
+  }
+
+  endMatch(won,fatality){
+    let best=parseInt(this.state.best)||0;
+    if(won){ this.streak+=1; if(this.streak>best){ best=this.streak; this.isNew=true; try{localStorage.setItem("him_mkcombo_streak",String(best));}catch(e){} } }
+    else { this.streak=0; }
+    this.matchResult={won,fatality};
+    this.phase="matchOver";
+    this.setState({best:String(best),frame:this.state.frame+1});
+  }
+
+  tick(){
+    const t=this.now();
+    if(this.youPose!=="ko"&&this.youPose!=="win"&&t>this.youPoseUntil) this.youPose="idle";
+    if(this.foePose!=="ko"&&this.foePose!=="win"&&this.phase!=="finish"&&t>this.foePoseUntil) this.foePose="idle";
+    if(this.youFlash>0) this.youFlash=Math.max(0,this.youFlash-0.12);
+    if(this.foeFlash>0) this.foeFlash=Math.max(0,this.foeFlash-0.12);
+    this.booms=this.booms.filter(b=>t-b.born<600);
+    this.parts=this.parts.filter(p=>t-p.born<520);
+    this.floaters=this.floaters.filter(f=>t-f.born<800);
+    // attack deadline
+    if(this.phase==="attack" && t>this.atkEnd){ this.comboFail(); }
+    // defend resolve
+    if(this.phase==="defend" && !this.defResolved && t>=this.defEnd){ this.defResolved=true; this.resolveHit(); }
+    // round timer
+    if((this.phase==="attack"||this.phase==="defend"||this.phase==="cooldown") && this.roundStart){
+      const left=this.ROUND_TIME-Math.floor((t-this.roundStart)/1000);
+      if(left<=0){ this.roundStart=0; this.roundWin(this.youHP>=this.foeHP?"you":"foe"); }
+    }
+    this.setState(s=>({frame:s.frame+1}));
+  }
+
+  restart(){
+    this._timers.forEach(clearTimeout); this._timers=[];
+    this.booms=[]; this.parts=[]; this.floaters=[]; this.fatalFlash=false;
+    this.youFlash=0; this.foeFlash=0; this.announce=null;
+    this.after(50,()=>this.startMatch());
+    this.setState(s=>({frame:s.frame+1}));
+  }
+
+  startDust(){
+    const cv=this._dust; if(!cv)return;
+    const ctx=cv.getContext("2d"); const dpr=window.devicePixelRatio||1;
+    const resize=()=>{ cv.width=cv.clientWidth*dpr; cv.height=cv.clientHeight*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); };
+    resize(); this._onR=resize; addEventListener("resize",resize);
+    const cols=["#e8a06a","#7ad4df","#ffffff"]; const P=[];
+    for(let i=0;i<30;i++) P.push({x:Math.random(),y:Math.random(),r:0.6+Math.random()*1.4,sp:0.015+Math.random()*0.04,a:0.06+Math.random()*0.26,ph:Math.random()*6,c:cols[(Math.random()*cols.length)|0]});
+    const draw=()=>{
+      const w=cv.clientWidth,h=cv.clientHeight; ctx.clearRect(0,0,w,h);
+      for(const p of P){ p.y-=p.sp/100; if(p.y<-0.05){p.y=1.05;p.x=Math.random();} p.ph+=0.01;
+        const x=p.x*w+Math.sin(p.ph)*7, y=p.y*h;
+        ctx.globalAlpha=p.a*(0.5+0.5*Math.sin(p.ph)); ctx.fillStyle=p.c;
+        ctx.beginPath(); ctx.arc(x,y,p.r,0,7); ctx.fill(); }
+      ctx.globalAlpha=1; this._d=requestAnimationFrame(draw);
+    };
+    this._d=requestAnimationFrame(draw);
+  }
+
+  poseTransform(pose,side){
+    const dir=side==="you"?1:-1;
+    if(pose==="attack") return `translateX(${34*dir}px) translateY(-2px) scale(1.05)`;
+    if(pose==="hit") return `translateX(${-20*dir}px) rotate(${-6*dir}deg)`;
+    if(pose==="block") return `translateY(5px) scale(0.94)`;
+    if(pose==="ko") return `translateX(${-14*dir}px) translateY(42px) rotate(${-78*dir}deg)`;
+    if(pose==="win") return `translateY(-4px) scale(1.04)`;
+    return "translateY(0)";
+  }
+
+  renderVals(){
+    const hpCol=(hp)=> hp>50?"linear-gradient(90deg,#e8b94e,#ffd27a)":hp>25?"linear-gradient(90deg,#e8792e,#ffb56b)":"linear-gradient(90deg,#d44a6a,#f5808f)";
+    const mkPips=(w,col)=>[0,1].map(i=>({style:`width:13px;height:13px;border-radius:3px;transform:rotate(45deg);background:${i<w?col:"transparent"};border:1.5px solid ${i<w?col:"rgba(255,255,255,0.22)"};box-shadow:${i<w?`0 0 8px ${col}`:"none"};`}));
+    const youBob = this.youPose==="idle"?"animation:idleBob 2.4s ease-in-out infinite;":"";
+    const foeBob = this.foePose==="idle"?"animation:idleBob 2.4s ease-in-out infinite;":"";
+    const youWrap=`position:absolute;left:20%;bottom:46px;transform:translateX(-50%) ${this.poseTransform(this.youPose,"you")};transition:transform .14s cubic-bezier(.3,.9,.4,1);z-index:8;${youBob}`;
+    const foeWrap=`position:absolute;left:80%;bottom:46px;transform:translateX(-50%) ${this.poseTransform(this.foePose,"foe")};transition:transform .14s cubic-bezier(.3,.9,.4,1);z-index:8;${foeBob}`;
+
+    const booms=this.booms.map(b=>({id:b.id,style:`position:absolute;left:${b.x}%;top:${b.y}%;width:${b.size}px;height:${b.size}px;z-index:10;border-radius:50%;border:3px solid ${b.color};box-shadow:0 0 22px ${b.color};pointer-events:none;animation:boomRing .55s ease-out forwards;`}));
+    const parts=this.parts.map(p=>({id:p.id,style:`position:absolute;left:${p.x}%;top:${p.y}%;width:5px;height:5px;z-index:11;border-radius:50%;background:${p.color};box-shadow:0 0 6px ${p.color};--tx:${p.tx}px;--ty:${p.ty}px;animation:spark .5s ease-out forwards;pointer-events:none;`}));
+    const floaters=this.floaters.map(f=>({id:f.id,text:f.text,style:`position:absolute;left:${f.x}%;top:${f.y}%;z-index:12;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px;color:${f.color};text-shadow:0 1px 4px rgba(0,0,0,0.8);pointer-events:none;animation:floatUp .8s ease-out forwards;`}));
+
+    const inAttack=this.phase==="attack"||this.phase==="finish";
+    const comboView=this.combo.map((m,i)=>{
+      const a=this.ATK[m]; const done=i<this.comboIdx; const active=i===this.comboIdx;
+      return { label:a.label, style:`width:46px;height:34px;display:flex;align-items:center;justify-content:center;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;border-radius:8px;color:${done?"#0a0b0d":a.color};background:${done?a.color:"rgba(255,255,255,0.04)"};border:2px solid ${active?"#fff":a.color+"66"};box-shadow:${active?"0 0 16px #fff8":"none"};transform:scale(${active?1.12:1});transition:all .12s ease;` };
+    });
+    const atkBarPct = this.phase==="attack"?Math.max(0,Math.min(100,(this.atkEnd-this.now())/(this.combo.length*820+ this.comboIdx*160)*100))+"%":(this.phase==="finish"?"100%":"0%");
+
+    const inDefend=this.phase==="defend";
+    const prog=inDefend?Math.max(0,Math.min(100,(this.now()-this.defStart)/(this.defEnd-this.defStart)*100)):0;
+
+    const buttons=this.ORDER.map(m=>{
+      const a=this.ATK[m];
+      const expect=(this.phase==="attack"||this.phase==="finish")&&this.combo[this.comboIdx]===m;
+      return { label:a.label, sub:a.sub, onPress:()=>this.press(m),
+        style:`position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;color:${expect?"#0a0b0d":"#e7e6e3"};background:${expect?a.color:"rgba(255,255,255,0.04)"};border:2px solid ${expect?a.color:a.color+"55"};padding:16px 8px;border-radius:14px;cursor:pointer;transition:all .1s ease;box-shadow:${expect?"0 0 24px "+a.color:"none"};transform:scale(${expect?1.04:1});` };
+    });
+    const blockActive=inDefend && prog>=this.defZone[0]-6 && prog<=this.defZone[1]+4;
+    const blockStyle=`width:74px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:${blockActive?"#0a0b0d":"#56c8d6"};background:${blockActive?"#56c8d6":"rgba(86,200,214,0.08)"};border:2px solid #56c8d6${blockActive?"":"66"};padding:16px 6px;border-radius:14px;cursor:pointer;transition:all .1s ease;${blockActive?"animation:blockPulse .5s ease-in-out infinite;":""}`;
+
+    const an=this.announce;
+    const left=this.roundStart?Math.max(0,this.ROUND_TIME-Math.floor((this.now()-this.roundStart)/1000)):this.ROUND_TIME;
+    const mr=this.matchResult;
+
+    return {
+      rootRef:(el)=>{this._root=el;}, dustRef:(el)=>{this._dust=el;},
+      best:this.state.best,
+      youHpPct:this.youHP+"%", foeHpPct:this.foeHP+"%",
+      youHpColor:hpCol(this.youHP), foeHpColor:hpCol(this.foeHP),
+      youPips:mkPips(this.youWins,"#5fbf8e"), foePips:mkPips(this.foeWins,"#d44a6a"),
+      roundTimer:left, timerColor: left<=10?"#d44a6a":"#e7e6e3",
+      youWrap, foeWrap,
+      youFlash:this.youFlash, foeFlash:this.foeFlash, youFlashColor:this.youFlashCol, foeFlashColor:this.foeFlashCol,
+      booms, parts, floaters,
+      showAnnounce:!!an, announceText:an?an.text:"", announceColor:an?an.color:"#fff",
+      announceSub:!!(an&&an.sub), announceSubText:an?an.sub:"", announceDur:an?(an.dur/1000)+"s":"1.2s", announceSize:an?an.size:"38px", announceKey:an?an.key:0,
+      fatalFlash:this.fatalFlash,
+      inAttack, comboView, atkBarPct,
+      inDefend, markerPos:prog+"%", zoneStart:this.defZone[0]+"%", zoneW:(this.defZone[1]-this.defZone[0])+"%",
+      buttons, onBlock:()=>this.block(), blockStyle,
+      matchOver:this.phase==="matchOver",
+      resultText: mr? (mr.won?(mr.fatality?"FATALITY":"VICTORY"):"DEFEAT") : "",
+      resultColor: mr? (mr.won?"#5fbf8e":"#d44a6a") : "#fff",
+      resultSub: mr? (mr.won? (mr.fatality?"Flawless execution.":"Match won "+this.youWins+"–"+this.foeWins) : "Scorpion takes it "+this.foeWins+"–"+this.youWins) : "",
+      bestLine: this.isNew?"★ NEW BEST STREAK":"streak · "+this.streak,
+      restartLabel: mr&&mr.won?"Next fight →":"Run it back",
+      onRestart:()=>this.restart(),
+    };
+  }
+}
+</script>
+</body>
+</html>
