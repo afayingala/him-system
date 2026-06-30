@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#070608;}
+    @keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+    @keyframes auroraDrift{0%{transform:translate(-5%,-3%) scale(1.1)}50%{transform:translate(5%,4%) scale(1.25)}100%{transform:translate(-5%,-3%) scale(1.1)}}
+    @keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+    @keyframes spinR{from{transform:rotate(0)}to{transform:rotate(-360deg)}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes sweep{0%{transform:translateY(-120%)}100%{transform:translateY(2200px)}}
+    @keyframes corePulse{0%,100%{box-shadow:0 0 30px rgba(232,121,46,0.45),inset 0 0 26px rgba(255,255,255,0.12)}50%{box-shadow:0 0 56px rgba(232,121,46,0.8),inset 0 0 26px rgba(255,255,255,0.2)}}
+  </style>
+</helmet>
+<div style="position:relative;min-height:100vh;background:#070608;color:#e7e6e3;font-family:'Space Grotesk',sans-serif;overflow:hidden;padding:26px 30px 38px;">
+
+  <!-- ATMOSPHERE -->
+  <div style="position:absolute;inset:-15%;z-index:0;filter:blur(80px);opacity:0.55;background:radial-gradient(34% 34% at 75% 8%, rgba(232,121,46,0.5), transparent 70%),radial-gradient(34% 30% at 12% 92%, rgba(56,189,205,0.4), transparent 70%);animation:auroraDrift 30s ease-in-out infinite;"></div>
+  <canvas ref="{{ dustRef }}" style="position:absolute;inset:0;z-index:1;width:100%;height:100%;pointer-events:none;"></canvas>
+  <div style="position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0.5;background-image:linear-gradient(rgba(255,255,255,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.022) 1px,transparent 1px);background-size:48px 48px;"></div>
+  <div style="position:absolute;left:0;right:0;top:0;height:160px;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(232,121,46,0.07),transparent);animation:sweep 9s linear infinite;"></div>
+  <div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(130% 100% at 50% 40%, transparent 55%, rgba(7,6,8,0.7) 100%);"></div>
+
+  <!-- HEADER -->
+  <header style="position:relative;z-index:5;display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.07);">
+    <div style="display:flex;align-items:center;gap:15px;">
+      <div style="width:48px;height:48px;border:1.5px solid {{ accent }};border-radius:12px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 24px rgba(232,121,46,0.4);">
+        <div style="width:15px;height:15px;background:{{ accent }};border-radius:3px;transform:rotate(45deg);box-shadow:0 0 16px {{ accent }};"></div>
+      </div>
+      <div>
+        <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:21px;letter-spacing:2.5px;line-height:1;">THE HIM SYSTEM</div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;color:#7b7d82;margin-top:5px;">build for {{ name }} · v1.0 · est. since you</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:26px;">
+      <div style="text-align:right;">
+        <div style="font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:1px;color:#7b7d82;">SYSTEM TIME</div>
+        <div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:18px;letter-spacing:1px;">{{ clock }}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;color:#5fbf8e;">
+        <span style="width:8px;height:8px;border-radius:50%;background:#5fbf8e;box-shadow:0 0 10px #5fbf8e;animation:blip 1.8s ease-in-out infinite;display:inline-block;"></span>ONLINE
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO: greeting + orbit -->
+  <section style="position:relative;z-index:5;margin:30px 0 24px;display:grid;grid-template-columns:1fr auto;align-items:center;gap:30px;">
+    <div style="">
+      <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:3px;color:{{ accent }};margin-bottom:12px;">{{ greetLine }}</div>
+      <h1 style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:52px;line-height:1.02;letter-spacing:0.5px;">Welcome back,<br><span style="color:{{ accent }};text-shadow:0 0 36px rgba(232,121,46,0.5);">{{ name }}.</span></h1>
+      <p style="max-width:380px;font-size:14.5px;line-height:1.65;color:#9b9da2;margin-top:16px;">A small world built for one person. Four modules, six games, zero reasons that aren't you.</p>
+    </div>
+
+    <!-- ORBIT MOTIF -->
+    <div style="position:relative;width:230px;height:230px;">
+      <div style="position:absolute;inset:0;border:1px solid rgba(255,255,255,0.08);border-radius:50%;"></div>
+      <div style="position:absolute;inset:30px;border:1px dashed rgba(255,255,255,0.07);border-radius:50%;animation:spinR 40s linear infinite;"></div>
+      <div style="position:absolute;inset:0;animation:spin 24s linear infinite;">
+        <sc-for list="{{ orbitNodes }}" as="o" hint-placeholder-count="4">
+          <div style="position:absolute;top:50%;left:50%;width:0;height:0;transform:rotate({{ o.angle }});">
+            <div style="position:absolute;left:101px;top:-15px;width:30px;height:30px;border-radius:50%;background:{{ o.color }};box-shadow:0 0 16px {{ o.color }};display:flex;align-items:center;justify-content:center;animation:spinR 24s linear infinite;">
+              <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:12px;color:#070608;transform:rotate({{ o.neg }});">{{ o.n }}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90px;height:90px;border-radius:50%;background:radial-gradient(circle at 40% 35%, #fff, {{ accent }} 60%, rgba(120,60,20,0.5));animation:corePulse 4s ease-in-out infinite;display:flex;align-items:center;justify-content:center;">
+        <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;letter-spacing:1px;color:#1a0e06;">HIM</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULE GRID -->
+  <main style="position:relative;z-index:5;display:grid;grid-template-columns:repeat(4,1fr);gap:18px;">
+
+    <!-- REVEAL -->
+    <a href="index.html" style="grid-column:span 2;text-decoration:none;color:inherit;display:block;background:linear-gradient(155deg,rgba(232,121,46,0.14),rgba(20,15,12,0.4));border:1px solid rgba(232,121,46,0.30);border-radius:18px;padding:24px 26px;position:relative;overflow:hidden;backdrop-filter:blur(6px);transition:transform .2s ease,box-shadow .2s ease;" style-hover="transform:translateY(-5px);box-shadow:0 20px 56px rgba(232,121,46,0.24);">
+      <div style="position:absolute;top:11px;left:11px;width:13px;height:13px;border-left:2px solid rgba(232,121,46,0.6);border-top:2px solid rgba(232,121,46,0.6);"></div>
+      <div style="position:absolute;bottom:11px;right:11px;width:13px;height:13px;border-right:2px solid rgba(232,121,46,0.6);border-bottom:2px solid rgba(232,121,46,0.6);"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+        <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;color:{{ accent }};border:1px solid rgba(232,121,46,0.4);padding:4px 9px;border-radius:6px;">MODULE_01 · THE REVEAL</span>
+        <span style="font-family:'Space Mono',monospace;font-size:12px;color:#9b9da2;">→</span>
+      </div>
+      <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:25px;margin-bottom:4px;">{{ revealHeadline }}</div>
+      <div style="font-size:13px;color:#9b9da2;margin-bottom:18px;">Countdown · fireworks · a message that's only for you.</div>
+      <div style="display:flex;gap:12px;">
+        <sc-for list="{{ countParts }}" as="p" hint-placeholder-count="4">
+          <div style="flex:1;text-align:center;background:rgba(0,0,0,0.4);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:12px 6px;">
+            <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:29px;color:{{ accent }};line-height:1;text-shadow:0 0 18px rgba(232,121,46,0.5);">{{ p.val }}</div>
+            <div style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.5px;color:#7b7d82;margin-top:7px;">{{ p.label }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </a>
+
+    <!-- ARCADE -->
+    <a href="games.html" style="grid-column:span 2;text-decoration:none;color:inherit;display:block;background:linear-gradient(155deg,rgba(56,189,205,0.11),rgba(12,18,20,0.4));border:1px solid rgba(56,189,205,0.26);border-radius:18px;padding:24px 26px;position:relative;overflow:hidden;backdrop-filter:blur(6px);transition:transform .2s ease,box-shadow .2s ease;" style-hover="transform:translateY(-5px);box-shadow:0 20px 56px rgba(56,189,205,0.2);">
+      <div style="position:absolute;top:11px;left:11px;width:13px;height:13px;border-left:2px solid rgba(56,189,205,0.6);border-top:2px solid rgba(56,189,205,0.6);"></div>
+      <div style="position:absolute;bottom:11px;right:11px;width:13px;height:13px;border-right:2px solid rgba(56,189,205,0.6);border-bottom:2px solid rgba(56,189,205,0.6);"></div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;color:#56c8d6;border:1px solid rgba(56,189,205,0.4);padding:4px 9px;border-radius:6px;">MODULE_02 · THE ARCADE</span>
+        <span style="font-family:'Space Mono',monospace;font-size:12px;color:#9b9da2;">6 games →</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">
+        <sc-for list="{{ games }}" as="g" hint-placeholder-count="6">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;background:rgba(0,0,0,0.32);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:9px 11px;">
+            <span style="font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ g.name }}</span>
+            <span style="font-family:'Space Mono',monospace;font-size:10.5px;color:#56c8d6;white-space:nowrap;">{{ g.best }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </a>
+
+    <!-- IDENTITY -->
+    <a href="identity.html" style="grid-column:span 2;text-decoration:none;color:inherit;display:block;background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:22px 24px;position:relative;overflow:hidden;backdrop-filter:blur(6px);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;" style-hover="transform:translateY(-5px);border-color:rgba(232,121,46,0.4);box-shadow:0 16px 44px rgba(0,0,0,0.45);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;">
+        <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;color:#9b9da2;border:1px solid rgba(255,255,255,0.12);padding:4px 9px;border-radius:6px;">MODULE_03 · IDENTITY</span>
+        <span style="font-family:'Space Mono',monospace;font-size:11px;color:#7b7d82;">archive →</span>
+      </div>
+      <div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:18px;margin-bottom:13px;">Things I've noticed about you</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;">
+        <sc-for list="{{ traits }}" as="t" hint-placeholder-count="5">
+          <span style="font-family:'Space Mono',monospace;font-size:11px;color:#cfd0d2;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);padding:6px 11px;border-radius:20px;">{{ t }}</span>
+        </sc-for>
+      </div>
+    </a>
+
+    <!-- RESET -->
+    <a href="reset.html" style="grid-column:span 2;text-decoration:none;color:inherit;display:block;background:rgba(56,189,205,0.045);border:1px solid rgba(56,189,205,0.16);border-radius:18px;padding:22px 24px;position:relative;overflow:hidden;backdrop-filter:blur(6px);transition:transform .2s ease,box-shadow .2s ease;" style-hover="transform:translateY(-5px);box-shadow:0 16px 44px rgba(0,0,0,0.45);">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:15px;">
+        <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;color:#56c8d6;border:1px solid rgba(56,189,205,0.3);padding:4px 9px;border-radius:6px;">MODULE_04 · RESET</span>
+        <span style="font-family:'Space Mono',monospace;font-size:11px;color:#7b7d82;">breathe →</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:18px;">
+        <div style="width:60px;height:60px;border-radius:50%;border:1.5px solid rgba(56,189,205,0.5);display:flex;align-items:center;justify-content:center;flex-shrink:0;box-shadow:0 0 26px rgba(56,189,205,0.25) inset;">
+          <div style="width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#bef5fa,rgba(86,200,214,0.6));box-shadow:0 0 18px #56c8d6;"></div>
+        </div>
+        <div>
+          <div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:18px;margin-bottom:5px;">When it's a lot.</div>
+          <div style="font-size:12.5px;color:#9b9da2;line-height:1.5;">A calm screen, a slow breath, a neutral reminder. No pressure here.</div>
+        </div>
+      </div>
+    </a>
+  </main>
+
+  <!-- FOOTER -->
+  <footer style="position:relative;z-index:5;margin-top:24px;display:flex;align-items:center;justify-content:space-between;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;color:#6c6e73;border-top:1px solid rgba(255,255,255,0.06);padding-top:16px;flex-wrap:wrap;gap:10px;">
+    <span>4 MODULES LOADED · 6 GAMES ONLINE · 1 PERSON AUTHORIZED</span>
+    <span style="color:{{ accent }};">{{ footerNote }}</span>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:920},&quot;name&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Divine&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#e8792e&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;options&quot;:[&quot;#e8792e&quot;,&quot;#38bdcd&quot;,&quot;#d44a6a&quot;,&quot;#8b7ef0&quot;]}}">
+class Component extends DCLogic {
+  state = { now: new Date() };
+
+  componentDidMount() {
+    this._t = setInterval(() => this.setState({ now: new Date() }), 1000);
+    this.startDust();
+  }
+  componentWillUnmount(){ clearInterval(this._t); cancelAnimationFrame(this._d); removeEventListener("resize",this._onR); }
+
+  startDust(){
+    const cv=this._dust; if(!cv)return;
+    const ctx=cv.getContext("2d"); const dpr=window.devicePixelRatio||1;
+    const resize=()=>{ cv.width=cv.clientWidth*dpr; cv.height=cv.clientHeight*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); };
+    resize(); this._onR=resize; addEventListener("resize",resize);
+    const cols=["#e8a06a","#7ad4df","#ffffff"]; const P=[];
+    for(let i=0;i<40;i++) P.push({x:Math.random(),y:Math.random(),r:0.6+Math.random()*1.6,sp:0.015+Math.random()*0.05,a:0.08+Math.random()*0.32,ph:Math.random()*6,c:cols[(Math.random()*cols.length)|0]});
+    const draw=()=>{
+      const w=cv.clientWidth,h=cv.clientHeight; ctx.clearRect(0,0,w,h);
+      for(const p of P){ p.y-=p.sp/100; if(p.y<-0.05){p.y=1.05;p.x=Math.random();} p.ph+=0.01;
+        const x=p.x*w+Math.sin(p.ph)*7, y=p.y*h;
+        ctx.globalAlpha=p.a*(0.5+0.5*Math.sin(p.ph)); ctx.fillStyle=p.c;
+        ctx.beginPath(); ctx.arc(x,y,p.r,0,7); ctx.fill(); }
+      ctx.globalAlpha=1; this._d=requestAnimationFrame(draw);
+    };
+    this._d=requestAnimationFrame(draw);
+  }
+
+  renderVals() {
+    const name = this.props.name ?? "Divine";
+    const accent = this.props.accent ?? "#e8792e";
+    const now = this.state.now;
+    const target = new Date(2026, 6, 1, 0, 0, 0);
+    const diff = Math.max(0, target - now);
+    const isBday = (now.getMonth() === 6 && now.getDate() === 1);
+    const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+    const pad=(n)=>String(n).padStart(2,"0");
+
+    return {
+      dustRef:(el)=>{this._dust=el;},
+      name, accent, clock: now.toLocaleTimeString([], { hour:"2-digit", minute:"2-digit", second:"2-digit" }),
+      countParts:[{val:pad(d),label:"DAYS"},{val:pad(h),label:"HRS"},{val:pad(m),label:"MIN"},{val:pad(s),label:"SEC"}],
+      greetLine: isBday ? "// IT'S THE DAY" : "// COUNTDOWN ACTIVE",
+      revealHeadline: isBday ? "Happy Birthday." : "Almost time.",
+      orbitNodes:[
+        {n:"1",angle:"0deg",neg:"0deg",color:"#e8792e"},
+        {n:"2",angle:"90deg",neg:"-90deg",color:"#56c8d6"},
+        {n:"3",angle:"180deg",neg:"-180deg",color:"#e8b94e"},
+        {n:"4",angle:"270deg",neg:"-270deg",color:"#8b7ef0"},
+      ],
+      games:[
+        {name:"Naruto IQ",best:"Hokage"},{name:"Penalty Kicks",best:"5/5"},
+        {name:"MK Combo",best:"RD 8"},{name:"Clash Rush",best:"3W"},
+        {name:"Who Wins?",best:"24 calls"},{name:"Wordle",best:"streak 4"},
+      ],
+      traits:["competitive","loyal","quick learner","Naruto-coded","clutch","soft when it counts"],
+      footerNote: isBday ? "made entirely for you ♦" : "see you at midnight ♦",
+    };
+  }
+}
+</script>
+</body>
+</html>
