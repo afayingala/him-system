@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0a0b0d;}
+    @keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+    @keyframes auroraDrift{0%{transform:translate(-5%,-3%) scale(1.1)}50%{transform:translate(5%,4%) scale(1.25)}100%{transform:translate(-5%,-3%) scale(1.1)}}
+    @keyframes cardIn{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes sweep{0%{transform:translateY(-120%)}100%{transform:translateY(2000px)}}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:#0a0b0d;color:#e7e6e3;font-family:'Space Grotesk',sans-serif;padding:26px 30px 48px;position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:-15%;z-index:0;filter:blur(80px);opacity:0.5;background:radial-gradient(34% 34% at 82% 6%, rgba(56,189,205,0.45), transparent 70%),radial-gradient(34% 30% at 8% 94%, rgba(232,121,46,0.3), transparent 70%);animation:auroraDrift 30s ease-in-out infinite;"></div>
+  <div style="position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0.5;background-image:linear-gradient(rgba(255,255,255,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.022) 1px,transparent 1px);background-size:48px 48px;"></div>
+  <div style="position:absolute;left:0;right:0;top:0;height:150px;z-index:1;pointer-events:none;background:linear-gradient(180deg,rgba(56,189,205,0.06),transparent);animation:sweep 9s linear infinite;"></div>
+  <div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(130% 100% at 50% 40%, transparent 55%, rgba(10,11,13,0.7) 100%);"></div>
+
+  <header style="position:relative;z-index:5;display:flex;align-items:center;justify-content:space-between;padding-bottom:20px;border-bottom:1px solid rgba(255,255,255,0.07);">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="Home.html" style="text-decoration:none;color:#9b9da2;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:1px;border:1px solid rgba(255,255,255,0.12);padding:8px 12px;border-radius:9px;backdrop-filter:blur(8px);">← HOME</a>
+      <div>
+        <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;letter-spacing:2px;">THE ARCADE</div>
+        <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;color:#7b7d82;margin-top:4px;">MODULE_02 · 6 games · built around you</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;color:#56c8d6;">
+      <span style="width:8px;height:8px;border-radius:50%;background:#56c8d6;box-shadow:0 0 10px #56c8d6;animation:blip 1.8s ease-in-out infinite;"></span>6 ONLINE
+    </div>
+  </header>
+
+  <section style="position:relative;z-index:5;margin:30px 0 26px;">
+    <h1 style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:40px;line-height:1.05;">Pick your <span style="color:#56c8d6;text-shadow:0 0 30px rgba(56,189,205,0.5);">arena</span>.</h1>
+    <p style="margin-top:10px;font-size:14.5px;color:#9b9da2;max-width:460px;">No generic arcade junk. Every one of these is a piece of you — Naruto, Mortal Kombat, FIFA, the lot. Beat your best.</p>
+  </section>
+
+  <main style="position:relative;z-index:5;display:grid;grid-template-columns:repeat(3,1fr);gap:18px;">
+    <sc-for list="{{ games }}" as="g" hint-placeholder-count="6">
+      <a href="{{ g.href }}" style="text-decoration:none;color:inherit;display:flex;flex-direction:column;background:linear-gradient(160deg,rgba(255,255,255,0.05),rgba(255,255,255,0.012));border:1px solid rgba(255,255,255,0.08);border-radius:18px;padding:22px 22px 18px;position:relative;overflow:hidden;backdrop-filter:blur(6px);transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;min-height:218px;animation:cardIn .5s ease both;animation-delay:{{ g.delay }};" style-hover="transform:translateY(-6px);box-shadow:0 22px 56px rgba(0,0,0,0.55);border-color:{{ g.color }};">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:{{ g.color }};box-shadow:0 0 16px {{ g.color }};"></div>
+        <div style="position:absolute;bottom:10px;right:10px;width:13px;height:13px;border-right:2px solid {{ g.border }};border-bottom:2px solid {{ g.border }};"></div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+          <span style="font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:2px;color:{{ g.color }};border:1px solid {{ g.border }};padding:4px 8px;border-radius:6px;">{{ g.tag }}</span>
+          <div style="width:36px;height:36px;border:1.5px solid {{ g.border }};border-radius:9px;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.25);">
+            <div style="width:13px;height:13px;background:{{ g.color }};border-radius:{{ g.shape }};box-shadow:0 0 12px {{ g.color }};"></div>
+          </div>
+        </div>
+        <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:23px;line-height:1.05;margin-bottom:6px;">{{ g.name }}</div>
+        <div style="font-size:13px;color:#9b9da2;line-height:1.5;flex:1;">{{ g.desc }}</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.07);">
+          <span style="font-family:'Space Mono',monospace;font-size:10.5px;letter-spacing:1px;color:#7b7d82;">BEST</span>
+          <span style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:15px;color:{{ g.color }};">{{ g.best }}</span>
+        </div>
+      </a>
+    </sc-for>
+  </main>
+
+  <footer style="position:relative;z-index:5;margin-top:26px;display:flex;align-items:center;justify-content:space-between;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;color:#6c6e73;border-top:1px solid rgba(255,255,255,0.06);padding-top:16px;flex-wrap:wrap;gap:10px;">
+    <span>SCORES SAVED LOCALLY · BEAT THEM ALL</span>
+    <span style="color:#56c8d6;">good luck, Divine ♦</span>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:880}}">
+class Component extends DCLogic {
+  ls(key,fallback){ try { const v=localStorage.getItem(key); return (v===null||v==="")?fallback:v; } catch(e){ return fallback; } }
+  renderVals() {
+    const O="#e8792e", C="#56c8d6", R="#d44a6a", V="#8b7ef0", G="#5fbf8e", Y="#e8b94e";
+    const mk=(c)=>c+"55";
+    const narutoBest=this.ls("him_narutoiq_best","—");
+    const penBest=this.ls("him_penalty_best","—"); const penLabel=penBest==="—"?"—":penBest+" goals";
+    const mkBest=this.ls("him_mkcombo_streak","0"); const mkLabel=(mkBest==="0"||mkBest==="—")?"—":mkBest+" win streak";
+    const clashBest=this.ls("him_clash_best","0"); const clashLabel=(clashBest==="0"||clashBest==="—")?"—":clashBest+" win streak";
+    const whoBest=this.ls("him_whowins_best","0"); const whoLabel=(whoBest==="0"||whoBest==="—")?"—":whoBest+" calls";
+    const wordBest=this.ls("him_wordle_best","0"); const wordLabel=(wordBest==="0"||wordBest==="—")?"—":wordBest+" streak";
+    const arr=[
+      { name:"Naruto IQ", tag:"DUEL", desc:"A ninja duel of knowledge. Answer fast to land jutsu, slow and you take the hit.", best:narutoBest, color:O, shape:"3px", href:"naruto-iq.html" },
+      { name:"Penalty Kicks", tag:"FIFA", desc:"Shoot with aim + power, then dive as keeper. Best of 5, sudden death if it's level.", best:penLabel, color:G, shape:"50%", href:"penalty-kicks.html" },
+      { name:"MK Combo", tag:"FIGHT", desc:"Sub-Zero vs Scorpion. Best of 3, combo inputs, blocks, and a FINISH HIM fatality.", best:mkLabel, color:R, shape:"2px", href:"mk-combo.html" },
+      { name:"Clash Rush", tag:"ARENA", desc:"Real-time lane battle. Spend elixir, deploy troops, crown the towers before time runs out.", best:clashLabel, color:V, shape:"3px", href:"clash-rush.html" },
+      { name:"Who Wins?", tag:"VERSUS", desc:"Read the tale of the tape, make your call, watch the internet's split settle.", best:whoLabel, color:C, shape:"50%", href:"who-wins.html" },
+      { name:"Wordle", tag:"WORDS", desc:"Five letters — every answer a Naruto, MK, FIFA or gaming reference. Flip tiles, keep the streak.", best:wordLabel, color:Y, shape:"3px", href:"wordle.html" },
+    ];
+    return { games: arr.map((g,i)=>({ ...g, border:mk(g.color), delay:(i*0.07)+"s" })) };
+  }
+}
+</script>
+</body>
+</html>
