@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#0a0b0d;}
+    @keyframes auroraDrift{0%{transform:translate(-5%,-3%) scale(1.1)}50%{transform:translate(5%,4%) scale(1.25)}100%{transform:translate(-5%,-3%) scale(1.1)}}@keyframes sweepDown{0%{transform:translateY(-120%)}100%{transform:translateY(2200px)}}
+    @keyframes riseIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes floatUp{0%{opacity:0;transform:translate(-50%,0) scale(.7)}18%{opacity:1;transform:translate(-50%,-6px) scale(1.12)}100%{opacity:0;transform:translate(-50%,-34px) scale(.95)}}
+    @keyframes boomRing{0%{opacity:.9;transform:translate(-50%,-50%) scale(.2)}100%{opacity:0;transform:translate(-50%,-50%) scale(1)}}
+    @keyframes spawnPop{0%{opacity:0;transform:translate(-50%,-50%) scale(.2)}60%{opacity:1;transform:translate(-50%,-50%) scale(1.18)}100%{transform:translate(-50%,-50%) scale(1)}}
+    @keyframes shake{0%,100%{transform:translate(0,0)}20%{transform:translate(-5px,2px)}40%{transform:translate(5px,-2px)}60%{transform:translate(-4px,-2px)}80%{transform:translate(4px,2px)}}
+    @keyframes crownPop{0%{transform:scale(0) rotate(-30deg)}60%{transform:scale(1.3) rotate(8deg)}100%{transform:scale(1) rotate(0)}}
+    @keyframes flagWave{0%,100%{transform:skewX(0deg)}50%{transform:skewX(-12deg)}}
+  </style>
+</helmet>
+<div style="min-height:100vh;background:radial-gradient(1000px 600px at 50% -12%, rgba(139,126,240,0.13), transparent 60%),#0a0b0d;color:#e7e6e3;font-family:'Space Grotesk',sans-serif;padding:22px 26px 30px;position:relative;overflow:hidden;">
+  <div style="position:absolute;inset:-15%;z-index:0;filter:blur(80px);opacity:0.5;background:radial-gradient(34% 34% at 78% 6%, #8b7ef080, transparent 70%),radial-gradient(30% 30% at 10% 92%, #56c8d644, transparent 70%);animation:auroraDrift 30s ease-in-out infinite;"></div><canvas ref="{{ dustRef }}" style="position:absolute;inset:0;z-index:1;width:100%;height:100%;pointer-events:none;"></canvas><div style="position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0.5;background-image:linear-gradient(rgba(255,255,255,0.022) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.022) 1px,transparent 1px);background-size:46px 46px;"></div><div style="position:absolute;left:0;right:0;top:0;height:150px;z-index:1;pointer-events:none;background:linear-gradient(180deg,#8b7ef012,transparent);animation:sweepDown 9s linear infinite;"></div><div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(130% 100% at 50% 40%, transparent 55%, rgba(10,11,13,0.72) 100%);"></div><div style="position:fixed;top:16px;left:16px;width:18px;height:18px;border-left:2px solid #8b7ef066;border-top:2px solid #8b7ef066;z-index:4;pointer-events:none;"></div><div style="position:fixed;top:16px;right:16px;width:18px;height:18px;border-right:2px solid #8b7ef066;border-top:2px solid #8b7ef066;z-index:4;pointer-events:none;"></div><div style="position:fixed;bottom:16px;left:16px;width:18px;height:18px;border-left:2px solid #8b7ef066;border-bottom:2px solid #8b7ef066;z-index:4;pointer-events:none;"></div><div style="position:fixed;bottom:16px;right:16px;width:18px;height:18px;border-right:2px solid #8b7ef066;border-bottom:2px solid #8b7ef066;z-index:4;pointer-events:none;"></div>
+
+  <header style="position:relative;z-index:5;display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,0.07);max-width:760px;margin:0 auto;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <a href="games.html" style="text-decoration:none;color:#9b9da2;font-family:'Space Mono',monospace;font-size:12px;letter-spacing:1px;border:1px solid rgba(255,255,255,0.12);padding:8px 12px;border-radius:9px;">← ARCADE</a>
+      <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:18px;letter-spacing:2px;">CLASH RUSH</div>
+    </div>
+    <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:1px;color:#8b7ef0;">BEST · {{ best }}W</div>
+  </header>
+
+  <main style="position:relative;z-index:5;max-width:420px;margin:0 auto;padding-top:12px;">
+
+    <!-- CROWN HUD -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.5px;color:#d44a6a;">RIVAL</span>
+        <div style="display:flex;gap:4px;">
+          <sc-for list="{{ enemyCrowns }}" as="c" hint-placeholder-count="3">
+            <div style="{{ c.style }}"></div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;letter-spacing:1px;color:{{ timeColor }};min-width:62px;text-align:center;">{{ timeText }}</div>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div style="display:flex;gap:4px;">
+          <sc-for list="{{ youCrowns }}" as="c" hint-placeholder-count="3">
+            <div style="{{ c.style }}"></div>
+          </sc-for>
+        </div>
+        <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1.5px;color:#5fbf8e;">YOU</span>
+      </div>
+    </div>
+
+    <!-- ARENA -->
+    <div ref="{{ arenaRef }}" onClick="{{ onArena }}" style="position:relative;width:100%;height:560px;border-radius:16px;overflow:hidden;border:2px solid rgba(255,255,255,0.12);cursor:{{ arenaCursor }};background:linear-gradient(180deg,#241a33 0%,#1b1730 18%,#141a26 40%,#101a22 50%,#141a26 60%,#1b1730 82%,#241a33 100%);box-shadow:inset 0 0 60px rgba(0,0,0,0.6);">
+      <!-- pitch grid -->
+      <div style="position:absolute;inset:0;opacity:0.10;background-image:linear-gradient(rgba(255,255,255,0.8) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.8) 1px,transparent 1px);background-size:34px 34px;pointer-events:none;"></div>
+      <!-- enemy half tint -->
+      <div style="position:absolute;left:0;right:0;top:0;height:50%;background:linear-gradient(180deg,rgba(212,74,106,0.10),transparent);pointer-events:none;"></div>
+      <!-- river -->
+      <div style="position:absolute;left:0;right:0;top:46%;height:8%;background:linear-gradient(180deg,rgba(86,200,214,0.32),rgba(56,160,200,0.5));border-top:2px solid rgba(150,230,245,0.4);border-bottom:2px solid rgba(150,230,245,0.4);pointer-events:none;box-shadow:inset 0 0 20px rgba(0,0,0,0.3);"></div>
+      <!-- bridges -->
+      <div style="position:absolute;left:22%;top:45%;transform:translateX(-50%);width:38px;height:11%;background:repeating-linear-gradient(180deg,#6b5638 0 5px,#544229 5px 10px);border-radius:3px;border:1px solid #3a2d1c;pointer-events:none;"></div>
+      <div style="position:absolute;left:78%;top:45%;transform:translateX(-50%);width:38px;height:11%;background:repeating-linear-gradient(180deg,#6b5638 0 5px,#544229 5px 10px);border-radius:3px;border:1px solid #3a2d1c;pointer-events:none;"></div>
+
+      <!-- deploy zone hint -->
+      <sc-if value="{{ deploying }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;left:0;right:0;top:50%;bottom:0;background:repeating-linear-gradient(45deg,rgba(95,191,142,0.10) 0 12px,transparent 12px 24px);border-top:2px dashed rgba(95,191,142,0.5);pointer-events:none;display:flex;align-items:flex-end;justify-content:center;padding-bottom:14px;">
+          <span style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;color:#bff0d6;background:rgba(0,0,0,0.4);padding:5px 12px;border-radius:8px;">TAP TO DEPLOY {{ selectedName }}</span>
+        </div>
+      </sc-if>
+
+      <!-- TOWERS -->
+      <sc-for list="{{ towers }}" as="t" hint-placeholder-count="6">
+        <div style="{{ t.wrap }}">
+          <sc-if value="{{ t.showHp }}" hint-placeholder-val="{{ false }}">
+            <div style="width:{{ t.w }};height:5px;border-radius:3px;background:rgba(0,0,0,0.55);overflow:hidden;margin-bottom:4px;border:1px solid rgba(255,255,255,0.15);">
+              <div style="height:100%;width:{{ t.hpPct }};background:{{ t.hpColor }};transition:width .15s ease;"></div>
+            </div>
+          </sc-if>
+          <div style="{{ t.body }}">
+            <div style="{{ t.crenel }}"></div>
+            <div style="{{ t.flag }}"></div>
+          </div>
+        </div>
+      </sc-for>
+
+      <!-- TROOPS -->
+      <sc-for list="{{ troops }}" as="u" hint-placeholder-count="0">
+        <div style="{{ u.wrap }}">
+          <div style="width:26px;height:4px;border-radius:3px;background:rgba(0,0,0,0.6);overflow:hidden;margin:0 auto 3px;">
+            <div style="height:100%;width:{{ u.hpPct }};background:{{ u.ring }};"></div>
+          </div>
+          <div style="{{ u.disc }}">{{ u.label }}</div>
+        </div>
+      </sc-for>
+
+      <!-- BOOMS -->
+      <sc-for list="{{ booms }}" as="b" hint-placeholder-count="0">
+        <div style="{{ b.style }}"></div>
+      </sc-for>
+
+      <!-- FLOATERS -->
+      <sc-for list="{{ floaters }}" as="f" hint-placeholder-count="0">
+        <div style="{{ f.style }}">{{ f.text }}</div>
+      </sc-for>
+
+      <!-- RESULT OVERLAY -->
+      <sc-if value="{{ over }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:20;background:rgba(8,7,12,0.78);backdrop-filter:blur(6px);display:flex;flex-direction:column;align-items:center;justify-content:center;animation:riseIn .4s ease both;">
+          <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:44px;letter-spacing:2px;color:{{ resultColor }};text-shadow:0 0 34px {{ resultColor }};">{{ resultText }}</div>
+          <div style="display:flex;gap:18px;margin:20px 0 6px;">
+            <div style="text-align:center;"><div style="font-family:'Chakra Petch';font-weight:700;font-size:34px;color:#5fbf8e;">{{ crownsYouN }}</div><div style="font-family:'Space Mono';font-size:10px;letter-spacing:1px;color:#7b7d82;">YOU</div></div>
+            <div style="align-self:center;font-family:'Chakra Petch';font-size:22px;color:#7b7d82;">–</div>
+            <div style="text-align:center;"><div style="font-family:'Chakra Petch';font-weight:700;font-size:34px;color:#d44a6a;">{{ crownsEnemyN }}</div><div style="font-family:'Space Mono';font-size:10px;letter-spacing:1px;color:#7b7d82;">RIVAL</div></div>
+          </div>
+          <div style="font-family:'Space Mono',monospace;font-size:12px;color:#56c8d6;margin-bottom:18px;">{{ bestLine }}</div>
+          <button onClick="{{ onRestart }}" style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:15px;letter-spacing:1px;color:#070608;background:#8b7ef0;border:none;padding:13px 30px;border-radius:12px;cursor:pointer;box-shadow:0 0 26px rgba(139,126,240,0.5);">Rematch →</button>
+        </div>
+      </sc-if>
+    </div>
+
+    <!-- ELIXIR -->
+    <div style="display:flex;align-items:center;gap:8px;margin-top:12px;">
+      <span style="font-family:'Space Mono',monospace;font-size:10px;letter-spacing:1px;color:#c08bf0;width:42px;">ELIXIR</span>
+      <div style="flex:1;display:flex;gap:3px;">
+        <sc-for list="{{ elixirBars }}" as="e" hint-placeholder-count="10">
+          <div style="flex:1;height:16px;border-radius:4px;background:rgba(255,255,255,0.06);overflow:hidden;box-shadow:{{ e.glow }};">
+            <div style="height:100%;width:{{ e.fill }};background:linear-gradient(180deg,#d4a0f5,#a96fe0);transition:width .12s linear;"></div>
+          </div>
+        </sc-for>
+      </div>
+      <span style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:20px;color:#c08bf0;width:26px;text-align:right;">{{ elixir }}</span>
+    </div>
+
+    <!-- HAND -->
+    <div style="display:flex;gap:8px;margin-top:12px;align-items:stretch;">
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;flex:1;">
+        <sc-for list="{{ hand }}" as="c" hint-placeholder-count="4">
+          <button onClick="{{ c.onSelect }}" disabled="{{ c.locked }}" style="{{ c.style }}">
+            <div style="{{ c.art }}">{{ c.label }}</div>
+            <div style="font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:10.5px;line-height:1.1;padding:4px 2px 0;text-align:center;color:#e7e6e3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ c.name }}</div>
+            <div style="{{ c.costBadge }}">{{ c.cost }}</div>
+          </button>
+        </sc-for>
+      </div>
+      <div style="width:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:11px;padding:6px 4px;">
+        <span style="font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;color:#7b7d82;">NEXT</span>
+        <div style="{{ nextArt }}">{{ nextLabel }}</div>
+      </div>
+    </div>
+  </main>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:520,&quot;height&quot;:820}}">
+class Component extends DCLogic {
+  MATCH = 80;
+  C = {
+    knight:{name:"Knight",cost:3,color:"#9aa7b4",label:"KN",rar:"#9aa7b4",hp:1400,dmg:160,spd:0.62,range:7,atk:11},
+    archers:{name:"Archers",cost:3,color:"#c98be0",label:"AR",rar:"#c98be0",hp:560,dmg:95,spd:0.6,range:24,atk:13,ranged:true},
+    giant:{name:"Giant",cost:5,color:"#e0a85b",label:"GI",rar:"#e8b94e",hp:3300,dmg:230,spd:0.4,range:7,atk:16,onlyTowers:true},
+    goblins:{name:"Goblins",cost:2,color:"#5fbf8e",label:"GB",rar:"#9aa7b4",hp:220,dmg:90,spd:1.05,range:5,atk:8},
+    hog:{name:"Hog Rider",cost:4,color:"#c9803e",label:"HG",rar:"#e8b94e",hp:1600,dmg:280,spd:1.15,range:7,atk:12,onlyTowers:true},
+    musk:{name:"Musketeer",cost:4,color:"#d46a8a",label:"MU",rar:"#e8b94e",hp:640,dmg:190,spd:0.58,range:26,atk:14,ranged:true},
+    pekka:{name:"Mini PEKKA",cost:4,color:"#8b7ef0",label:"PK",rar:"#e8b94e",hp:1300,dmg:640,spd:0.78,range:7,atk:17},
+    fireball:{name:"Fireball",cost:4,color:"#e8792e",label:"FB",rar:"#e8b94e",spell:true,dmg:690,radius:22},
+  };
+  DECK = ["knight","archers","giant","goblins","hog","musk","pekka","fireball"];
+
+  state = { frame:0, phase:"play", best:this.read(), wins:0 };
+
+  // authoritative game data on instance
+  troops = [];
+  floaters = [];
+  booms = [];
+  elixir = 5; enemyElixir = 5;
+  uid = 1;
+  selected = null;
+  crownsYou = 0; crownsEnemy = 0;
+  queue = this.shuffle(this.DECK);
+  towers = this.makeTowers();
+
+  read(){ try { return parseInt(localStorage.getItem("him_clash_best"))||0; } catch(e){ return 0; } }
+  shuffle(a){ return [...a].sort(()=>Math.random()-0.5); }
+
+  makeTowers(){
+    const mk=(id,side,kind,x,y)=>{
+      const princess = kind==="princess";
+      return { id, side, kind, x, y, isTower:true,
+        hp: princess?1500:2400, maxHp: princess?1500:2400,
+        range: princess?25:20, dmg: princess?95:120, atk: princess?10:13, cd:0,
+        r: princess?7:9 };
+    };
+    return [
+      mk("eL","enemy","princess",22,20), mk("eR","enemy","princess",78,20), mk("eK","enemy","king",50,9),
+      mk("yL","you","princess",22,80), mk("yR","you","princess",78,80), mk("yK","you","king",50,91),
+    ];
+  }
+
+  componentDidMount(){
+    this.endAt = Date.now() + this.MATCH*1000;
+    this._loop = setInterval(()=>this.tick(), 80);
+    this.startDust();
+  }
+  componentWillUnmount(){ clearInterval(this._loop); cancelAnimationFrame(this._d); removeEventListener("resize",this._onR); }
+
+  dist(a,b){ return Math.hypot(a.x-b.x,a.y-b.y); }
+
+  addFloater(x,y,text,color){
+    this.floaters.push({ id:this.uid++, x, y, text, color, born:Date.now() });
+    if(this.floaters.length>40) this.floaters.shift();
+  }
+  addBoom(x,y,color,size){
+    this.booms.push({ id:this.uid++, x, y, color, size, born:Date.now() });
+    if(this.booms.length>24) this.booms.shift();
+  }
+  shake(){ const a=this._arena; if(!a)return; a.style.animation="none"; void a.offsetWidth; a.style.animation="shake .32s"; }
+
+  applyDmg(target,dmg,fromSide){
+    if(target.hp<=0) return;
+    target.hp -= dmg;
+    this.addFloater(target.x, target.y-(target.isTower?5:4), Math.round(dmg), fromSide==="you"?"#bff0d6":"#f5b8c6");
+    if(target.hp<=0) this.kill(target);
+  }
+
+  kill(target){
+    target.hp = 0;
+    if(target.isTower){
+      this.addBoom(target.x,target.y,"#ffd27a",46); this.shake();
+      if(target.side==="enemy") this.crownsYou++; else this.crownsEnemy++;
+      if(target.kind==="king"){ this.end(target.side==="enemy"?"you":"enemy"); }
+    } else {
+      this.addBoom(target.x,target.y,target.side==="you"?"#5fbf8e":"#d44a6a",26);
+    }
+  }
+
+  spawn(side,key,x,y){
+    const c=this.C[key];
+    if(c.spell){
+      this.addBoom(x,y,"#e8792e",58); this.shake();
+      const foes=[...this.troops.filter(t=>t.side!==side&&t.hp>0), ...this.towers.filter(t=>t.side!==side&&t.hp>0)];
+      for(const f of foes){ if(this.dist({x,y},f)<=c.radius) this.applyDmg(f, f.isTower?c.dmg*0.35:c.dmg, side); }
+      return;
+    }
+    this.troops.push({ id:this.uid++, side, key, x, y, hp:c.hp, maxHp:c.hp,
+      dmg:c.dmg, spd:c.spd, range:c.range, atk:c.atk, ranged:!!c.ranged, onlyTowers:!!c.onlyTowers,
+      label:c.label, color:c.color, cd:Math.round(c.atk*0.4), r:3.2, flash:0, born:Date.now() });
+    this.addBoom(x,y,side==="you"?"#5fbf8e":"#d44a6a",22);
+  }
+
+  enemyThink(){
+    if(this.enemyElixir<2) return;
+    if(Math.random()>0.035) return;
+    const affordable=this.DECK.filter(k=>this.C[k].cost<=this.enemyElixir);
+    if(!affordable.length) return;
+    const key=affordable[(Math.random()*affordable.length)|0];
+    const c=this.C[key];
+    const lane=Math.random()<0.5?22:78;
+    if(c.spell){
+      const t=this.troops.filter(t=>t.side==="you"&&t.hp>0);
+      const tgt=t.length?t[(Math.random()*t.length)|0]:{x:lane,y:80};
+      this.enemyElixir-=c.cost; this.spawn("enemy",key,tgt.x,tgt.y);
+    } else {
+      this.enemyElixir-=c.cost; this.spawn("enemy",key,lane+(Math.random()*12-6),18+Math.random()*22);
+    }
+  }
+
+  tick(){
+    if(this.state.phase!=="play") return;
+    // elixir
+    this.elixir=Math.min(10,this.elixir+0.044);
+    this.enemyElixir=Math.min(10,this.enemyElixir+0.04);
+    this.enemyThink();
+
+    // troops act
+    for(const u of this.troops){
+      if(u.hp<=0) continue;
+      if(u.flash>0) u.flash--;
+      let foes;
+      if(u.onlyTowers) foes=this.towers.filter(t=>t.side!==u.side&&t.hp>0);
+      else foes=[...this.troops.filter(t=>t.side!==u.side&&t.hp>0), ...this.towers.filter(t=>t.side!==u.side&&t.hp>0)];
+      // nearest target
+      let tgt=null,bd=1e9;
+      for(const f of foes){ const d=this.dist(u,f); if(d<bd){bd=d;tgt=f;} }
+      if(!tgt) continue;
+      const reach=u.range+(tgt.r||3);
+      if(bd<=reach){
+        u.cd--; if(u.cd<=0){ u.cd=u.atk; u.flash=3; this.applyDmg(tgt,u.dmg,u.side); }
+      } else {
+        const crossing=Math.abs(u.y-50)<13;
+        let aimX,aimY;
+        if(crossing){ aimX=u.x<50?22:78; aimY=u.side==="you"?42:58; }
+        else { aimX=tgt.x; aimY=tgt.y; }
+        const dx=aimX-u.x, dy=aimY-u.y, L=Math.hypot(dx,dy)||1;
+        u.x+=dx/L*u.spd; u.y+=dy/L*u.spd;
+      }
+    }
+
+    // towers act
+    for(const t of this.towers){
+      if(t.hp<=0) continue;
+      const foes=this.troops.filter(u=>u.side!==t.side&&u.hp>0);
+      let tgt=null,bd=1e9;
+      for(const f of foes){ const d=this.dist(t,f); if(d<bd){bd=d;tgt=f;} }
+      if(tgt&&bd<=t.range){ t.cd--; if(t.cd<=0){ t.cd=t.atk; this.applyDmg(tgt,t.dmg,t.side); } }
+    }
+
+    // cleanup
+    this.troops=this.troops.filter(u=>u.hp>0);
+    const now=Date.now();
+    this.floaters=this.floaters.filter(f=>now-f.born<800);
+    this.booms=this.booms.filter(b=>now-b.born<600);
+
+    // time
+    if(now>=this.endAt){ this.end(this.crownsYou>this.crownsEnemy?"you":(this.crownsEnemy>this.crownsYou?"enemy":"draw")); return; }
+
+    this.setState(s=>({ frame:s.frame+1 }));
+  }
+
+  end(winner){
+    let best=parseInt(this.state.best)||0;
+    let wins=this.state.wins;
+    let isNew=false;
+    if(winner==="you"){ wins+=1; if(wins>best){ best=wins; isNew=true; try{localStorage.setItem("him_clash_best",String(best));}catch(e){} } }
+    else if(winner==="enemy"){ wins=0; }
+    this.winner=winner; this.isNew=isNew;
+    this.setState({ phase:"over", best:String(best), wins });
+  }
+
+  select(idx){
+    if(this.state.phase!=="play") return;
+    const key=this.queue[idx];
+    if(this.C[key].cost>this.elixir){ return; }
+    this.selected = this.selected===idx?null:idx;
+    this.setState(s=>({ frame:s.frame+1 }));
+  }
+
+  onArenaClick(e){
+    if(this.selected===null||this.state.phase!=="play") return;
+    const a=this._arena; if(!a) return;
+    const r=a.getBoundingClientRect();
+    let x=(e.clientX-r.left)/r.width*100;
+    let y=(e.clientY-r.top)/r.height*100;
+    const idx=this.selected, key=this.queue[idx], c=this.C[key];
+    if(c.cost>this.elixir) return;
+    if(!c.spell){ if(y<53) y=53; if(y>94) y=94; }
+    x=Math.max(6,Math.min(94,x));
+    this.elixir-=c.cost;
+    // cycle card to back
+    this.queue.splice(idx,1); this.queue.push(key);
+    this.selected=null;
+    this.spawn("you",key,x,y);
+    this.setState(s=>({ frame:s.frame+1 }));
+  }
+
+  restart(){
+    this.troops=[]; this.floaters=[]; this.booms=[];
+    this.elixir=5; this.enemyElixir=5; this.selected=null;
+    this.crownsYou=0; this.crownsEnemy=0;
+    this.queue=this.shuffle(this.DECK);
+    this.towers=this.makeTowers();
+    this.endAt=Date.now()+this.MATCH*1000;
+    this.winner=null;
+    this.setState({ phase:"play", frame:0 });
+  }
+
+  startDust(){
+    const cv=this._dust; if(!cv)return;
+    const ctx=cv.getContext("2d"); const dpr=window.devicePixelRatio||1;
+    const resize=()=>{ cv.width=cv.clientWidth*dpr; cv.height=cv.clientHeight*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); };
+    resize(); this._onR=resize; addEventListener("resize",resize);
+    const cols=["#e8a06a","#7ad4df","#ffffff"]; const P=[];
+    for(let i=0;i<30;i++) P.push({x:Math.random(),y:Math.random(),r:0.6+Math.random()*1.4,sp:0.015+Math.random()*0.04,a:0.06+Math.random()*0.26,ph:Math.random()*6,c:cols[(Math.random()*cols.length)|0]});
+    const draw=()=>{
+      const w=cv.clientWidth,h=cv.clientHeight; ctx.clearRect(0,0,w,h);
+      for(const p of P){ p.y-=p.sp/100; if(p.y<-0.05){p.y=1.05;p.x=Math.random();} p.ph+=0.01;
+        const x=p.x*w+Math.sin(p.ph)*7, y=p.y*h;
+        ctx.globalAlpha=p.a*(0.5+0.5*Math.sin(p.ph)); ctx.fillStyle=p.c;
+        ctx.beginPath(); ctx.arc(x,y,p.r,0,7); ctx.fill(); }
+      ctx.globalAlpha=1; this._d=requestAnimationFrame(draw);
+    };
+    this._d=requestAnimationFrame(draw);
+  }
+
+  renderVals(){
+    const over=this.state.phase==="over";
+    // towers
+    const towers=this.towers.map(t=>{
+      const dead=t.hp<=0;
+      const sideCol=t.side==="you"?"#5fbf8e":"#d44a6a";
+      const sz=t.kind==="king"?56:44;
+      const light=t.side==="you"?"#3a7a5c":"#7a3147";
+      const dark=t.side==="you"?"#1d3a2c":"#3a1822";
+      const body=`position:relative;width:${sz}px;height:${sz}px;border-radius:8px;background:${dead?"linear-gradient(180deg,#2a2a2e,#161618)":`linear-gradient(180deg,${light},${dark})`};border:2px solid ${dead?"rgba(255,255,255,0.12)":sideCol};box-shadow:${dead?"none":`0 0 18px ${sideCol}66, inset 0 -6px 10px rgba(0,0,0,0.4)`};opacity:${dead?0.4:1};transition:opacity .3s ease;`;
+      const crenel=`position:absolute;top:-7px;left:-2px;right:-2px;height:8px;background:repeating-linear-gradient(90deg,${dead?"#2a2a2e":sideCol} 0 6px,transparent 6px 12px);opacity:${dead?0.4:1};`;
+      const flag=t.kind==="king"&&!dead?`position:absolute;top:-20px;left:50%;width:11px;height:13px;background:${sideCol};transform-origin:bottom left;animation:flagWave 1.4s ease-in-out infinite;clip-path:polygon(0 0,100% 0,100% 70%,50% 100%,0 70%);box-shadow:0 0 10px ${sideCol};`:"display:none;";
+      return {
+        id:t.id, w:sz+"px",
+        wrap:`position:absolute;left:${t.x}%;top:${t.y}%;transform:translate(-50%,-50%);z-index:6;display:flex;flex-direction:column;align-items:center;`,
+        body, crenel, flag,
+        showHp:!dead, hpPct:Math.max(0,t.hp/t.maxHp*100)+"%", hpColor:sideCol,
+      };
+    });
+    // troops
+    const troops=this.troops.map(u=>{
+      const ring=u.side==="you"?"#5fbf8e":"#d44a6a";
+      return {
+        id:u.id,
+        wrap:`position:absolute;left:${u.x}%;top:${u.y}%;transform:translate(-50%,-50%);z-index:7;transition:left .08s linear,top .08s linear;`,
+        disc:`width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:10px;color:#0a0b0d;background:radial-gradient(circle at 38% 30%,#ffffffcc,${u.color});border:2.5px solid ${ring};box-shadow:0 0 12px ${ring},0 2px 6px rgba(0,0,0,0.6);transform:scale(${u.flash>0?1.24:1});transition:transform .08s ease;`,
+        ring, label:u.label, hpPct:Math.max(0,u.hp/u.maxHp*100)+"%",
+      };
+    });
+    // floaters
+    const floaters=this.floaters.map(f=>({
+      id:f.id, text:f.text,
+      style:`position:absolute;left:${f.x}%;top:${f.y}%;z-index:9;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:14px;color:${f.color};text-shadow:0 1px 4px rgba(0,0,0,0.8);pointer-events:none;animation:floatUp .8s ease-out forwards;white-space:nowrap;`,
+    }));
+    // booms
+    const booms=this.booms.map(b=>({
+      id:b.id,
+      style:`position:absolute;left:${b.x}%;top:${b.y}%;width:${b.size}px;height:${b.size}px;z-index:8;border-radius:50%;border:3px solid ${b.color};box-shadow:0 0 22px ${b.color};pointer-events:none;animation:boomRing .55s ease-out forwards;`,
+    }));
+    // crowns
+    const mkCrowns=(n,col)=>[0,1,2].map(i=>({
+      style:`width:13px;height:13px;border-radius:3px;transform:rotate(45deg)${i<n?` scale(1)`:""};background:${i<n?col:"transparent"};border:1.5px solid ${i<n?col:"rgba(255,255,255,0.2)"};box-shadow:${i<n?`0 0 9px ${col}`:"none"};${i<n?"animation:crownPop .4s ease;":""}`,
+    }));
+    // elixir bars
+    const ef=this.elixir;
+    const elixirBars=Array.from({length:10},(_,i)=>{
+      const fill=Math.max(0,Math.min(1,ef-i))*100;
+      return { fill:fill+"%", glow: i<ef?"0 0 7px rgba(168,111,224,0.45)":"none" };
+    });
+    // hand
+    const elixInt=Math.floor(this.elixir);
+    const hand=[0,1,2,3].map(i=>{
+      const key=this.queue[i], c=this.C[key];
+      const afford=this.elixir>=c.cost;
+      const sel=this.selected===i;
+      return {
+        idx:i, name:c.name, cost:c.cost, label:c.label, locked:!afford&&!sel,
+        onSelect:()=>this.select(i),
+        style:`position:relative;display:flex;flex-direction:column;justify-content:flex-start;background:${sel?"rgba(139,126,240,0.22)":"rgba(255,255,255,0.04)"};border:2px solid ${sel?"#8b7ef0":(afford?c.rar:"rgba(255,255,255,0.08)")};border-radius:11px;padding:5px 4px 6px;cursor:${afford?"pointer":"default"};opacity:${afford?1:0.5};transform:translateY(${sel?-6:0}px);transition:all .15s ease;box-shadow:${sel?"0 8px 22px rgba(139,126,240,0.4)":"none"};`,
+        art:`height:40px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:17px;color:#0a0b0d;background:radial-gradient(circle at 40% 28%,#ffffffcc,${c.color});box-shadow:inset 0 0 12px rgba(0,0,0,0.25);`,
+        costBadge:`position:absolute;top:-7px;left:-7px;width:20px;height:20px;border-radius:50%;background:linear-gradient(180deg,#c08bf0,#8b5fd0);border:1.5px solid #e7d4f7;display:flex;align-items:center;justify-content:center;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:11px;color:#fff;box-shadow:0 2px 5px rgba(0,0,0,0.5);`,
+      };
+    });
+    const nextKey=this.queue[4]||this.queue[0], nc=this.C[nextKey];
+    const tl=Math.max(0,Math.ceil((this.endAt-Date.now())/1000))||0;
+    const tlText=`${Math.floor(tl/60)}:${String(tl%60).padStart(2,"0")}`;
+    const winner=this.winner;
+
+    return {
+      dustRef:(el)=>{this._dust=el;},
+      arenaRef:(el)=>{this._arena=el;},
+      onArena:(e)=>this.onArenaClick(e),
+      best:this.state.best,
+      towers, troops, floaters, booms,
+      youCrowns:mkCrowns(this.crownsYou,"#5fbf8e"), enemyCrowns:mkCrowns(this.crownsEnemy,"#d44a6a"),
+      elixirBars, elixir:elixInt, hand,
+      nextArt:`width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:13px;color:#0a0b0d;background:radial-gradient(circle at 40% 28%,#ffffffcc,${nc.color});`,
+      nextLabel:nc.label,
+      timeText:tlText, timeColor: tl<=15?"#d44a6a":"#e7e6e3",
+      deploying:this.selected!==null&&!over, selectedName:this.selected!==null?this.C[this.queue[this.selected]].name.toUpperCase():"",
+      arenaCursor:this.selected!==null?"crosshair":"default",
+      over, crownsYouN:this.crownsYou, crownsEnemyN:this.crownsEnemy,
+      resultText: winner==="you"?"VICTORY":(winner==="enemy"?"DEFEAT":"DRAW"),
+      resultColor: winner==="you"?"#5fbf8e":(winner==="enemy"?"#d44a6a":"#e8b94e"),
+      bestLine: this.isNew?"★ NEW WIN STREAK":(winner==="you"?`win streak · ${this.state.wins}`:"best streak · "+this.state.best),
+      onRestart:()=>this.restart(),
+    };
+  }
+}
+</script>
+</body>
+</html>
