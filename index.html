@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{background:#070608;}
+    @keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+    @keyframes auroraDrift{0%{transform:translate(-5%,-3%) scale(1.1)}50%{transform:translate(5%,4%) scale(1.25)}100%{transform:translate(-5%,-3%) scale(1.1)}}
+    @keyframes spin{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+    @keyframes spinR{from{transform:translate(-50%,-50%) rotate(0)}to{transform:translate(-50%,-50%) rotate(-360deg)}}
+    @keyframes sealPulse{0%,100%{opacity:.5;filter:drop-shadow(0 0 16px rgba(232,121,46,.4))}50%{opacity:.95;filter:drop-shadow(0 0 34px rgba(232,121,46,.8))}}
+    @keyframes pulseGlow{0%,100%{text-shadow:0 0 26px rgba(232,121,46,0.35)}50%{text-shadow:0 0 50px rgba(232,121,46,0.75)}}
+    @keyframes riseIn{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+    @keyframes floaty{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-7px)}}
+  </style>
+</helmet>
+<div style="position:relative;min-height:100vh;background:#070608;color:#e7e6e3;font-family:'Space Grotesk',sans-serif;overflow-x:hidden;">
+
+  <canvas ref="{{ fxRef }}" style="position:fixed;inset:0;width:100vw;height:100vh;pointer-events:none;z-index:2;"></canvas>
+
+  <!-- ============ COUNTDOWN ============ -->
+  <sc-if value="{{ isCountdown }}" hint-placeholder-val="{{ true }}">
+    <div style="position:absolute;inset:-15%;z-index:0;filter:blur(80px);opacity:0.5;background:radial-gradient(40% 40% at 50% 35%, rgba(232,121,46,0.5), transparent 70%),radial-gradient(34% 30% at 70% 80%, rgba(212,74,46,0.3), transparent 70%);animation:auroraDrift 28s ease-in-out infinite;"></div>
+    <div style="position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0.5;background-image:linear-gradient(rgba(255,255,255,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.02) 1px,transparent 1px);background-size:48px 48px;"></div>
+    <div style="position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(130% 100% at 50% 45%, transparent 50%, rgba(7,6,8,0.8) 100%);"></div>
+
+    <section style="position:relative;z-index:3;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;">
+      <!-- SEAL MOTIF -->
+      <div style="position:absolute;top:50%;left:50%;width:540px;height:540px;border:1px solid rgba(232,121,46,0.18);border-radius:50%;transform:translate(-50%,-50%);animation:spin 60s linear infinite;"></div>
+      <div style="position:absolute;top:50%;left:50%;width:430px;height:430px;border:1px dashed rgba(232,121,46,0.22);border-radius:50%;transform:translate(-50%,-50%);animation:spinR 44s linear infinite;"></div>
+      <div style="position:absolute;top:50%;left:50%;width:330px;height:330px;border:2px solid rgba(232,121,46,0.12);border-radius:50%;transform:translate(-50%,-50%);animation:sealPulse 5s ease-in-out infinite;"></div>
+
+      <div style="position:relative;">
+        <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:4px;color:#e8792e;margin-bottom:22px;">THE HIM SYSTEM // SECURE CHANNEL</div>
+        <h1 style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:32px;letter-spacing:1px;margin-bottom:6px;line-height:1.2;">Something unlocks at midnight,</h1>
+        <h1 style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:48px;letter-spacing:1px;color:#e8792e;animation:pulseGlow 3s ease-in-out infinite;margin-bottom:44px;">Divine.</h1>
+
+        <div style="display:flex;gap:16px;justify-content:center;margin-bottom:38px;">
+          <sc-for list="{{ countParts }}" as="p" hint-placeholder-count="4">
+            <div style="width:108px;text-align:center;background:rgba(10,8,7,0.7);border:1px solid rgba(232,121,46,0.25);border-radius:16px;padding:20px 8px;backdrop-filter:blur(6px);box-shadow:0 10px 36px rgba(0,0,0,0.5);">
+              <div style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:48px;color:#fff;line-height:1;">{{ p.val }}</div>
+              <div style="font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;color:#9b7a5e;margin-top:10px;">{{ p.label }}</div>
+            </div>
+          </sc-for>
+        </div>
+
+        <div style="font-family:'Space Mono',monospace;font-size:12.5px;color:#8a7563;max-width:380px;margin:0 auto;line-height:1.7;">No notifications. No noise. Just a countdown I built so you'd know exactly when it begins.</div>
+      </div>
+
+      <div onClick="{{ onSecretTap }}" style="position:fixed;right:0;bottom:0;width:78px;height:78px;z-index:6;"></div>
+      <sc-if value="{{ showHint }}" hint-placeholder-val="{{ false }}">
+        <div style="position:fixed;right:16px;bottom:14px;z-index:6;font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;color:#5a4636;">{{ tapHint }}</div>
+      </sc-if>
+    </section>
+  </sc-if>
+
+  <!-- ============ PARTY ============ -->
+  <sc-if value="{{ isParty }}" hint-placeholder-val="{{ false }}">
+    <div style="position:relative;z-index:3;">
+      <section style="min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px;position:relative;">
+        <div style="font-family:'Space Mono',monospace;font-size:13px;letter-spacing:5px;color:#e8792e;margin-bottom:18px;animation:riseIn .8s ease both;">// JULY 1 — UNLOCKED</div>
+        <h1 style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:17vw;line-height:0.9;letter-spacing:-1px;margin:0;background:linear-gradient(100deg,#fff 20%,#e8792e 50%,#fff 80%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 4s linear infinite;">HAPPY</h1>
+        <h1 style="font-family:'Chakra Petch',sans-serif;font-weight:700;font-size:17vw;line-height:0.9;letter-spacing:-1px;margin:0 0 18px;background:linear-gradient(100deg,#fff 20%,#e8792e 50%,#fff 80%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 4s linear infinite;">BIRTHDAY</h1>
+        <div style="font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:30px;letter-spacing:7px;color:#e7e6e3;animation:riseIn 1s .3s ease both;">D I V I N E</div>
+        <div style="position:absolute;bottom:34px;left:50%;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;color:#8a7563;animation:floaty 2.4s ease-in-out infinite;">scroll ↓</div>
+      </section>
+
+      <section style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 30px;">
+        <div style="max-width:620px;">
+          <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:3px;color:#e8792e;margin-bottom:26px;">// A MESSAGE, JUST FOR YOU</div>
+          <p style="font-family:'Chakra Petch',sans-serif;font-weight:400;font-size:25px;line-height:1.6;color:#e7e6e3;">{{ message }}</p>
+          <div style="margin-top:34px;font-family:'Space Grotesk',sans-serif;font-size:16px;color:#9b9da2;">— and I'd build it all again. ♦</div>
+        </div>
+      </section>
+
+      <section style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:80px 30px;">
+        <div style="max-width:720px;width:100%;text-align:center;">
+          <div style="font-family:'Space Mono',monospace;font-size:12px;letter-spacing:3px;color:#56c8d6;margin-bottom:26px;">// THE FINAL MOMENT</div>
+          <div style="position:relative;border:1.5px dashed rgba(86,200,214,0.4);border-radius:22px;padding:54px 38px;background:repeating-linear-gradient(135deg,rgba(255,255,255,0.018) 0 14px,transparent 14px 28px);text-align:left;">
+            <p style="font-family:'Space Grotesk',sans-serif;font-size:16px;line-height:1.85;color:#d6d5d2;margin-bottom:24px;">My Divine,</p>
+            <p style="font-family:'Space Grotesk',sans-serif;font-size:16px;line-height:1.85;color:#d6d5d2;margin-bottom:20px;">I can still vividly remember the first time you ever spoke to me. It was on the 26th of September 2025. It was a voice note. You said, <em>"this is not Rezi speaking, so I'm just going to say this thing here. First things first, sorry for your three minutes VN, because I'm not going to listen to all of it. But based on the first 15 seconds, nah, there's this thing called the two sides of the coin."</em> Six days later, on the 2nd of October, you came back for a debate, and just like that, you were introduced into my life. In that moment, I could never imagine how much you would mean to me later on.</p>
+            <p style="font-family:'Space Grotesk',sans-serif;font-size:16px;line-height:1.85;color:#d6d5d2;margin-bottom:20px;">Nine months later, and you are not the same. You have grown — mentally, professionally, emotionally, and in so many other aspects. And I am so proud of you. I know you said you do not like compliments, but to a man with a beautiful heart, a good head on his shoulders, a free spirit, an elite sense of humor, physical features sculpted by God himself — to the zeal, the will, fight, and determination that forges legacies, to one of the most genuine people I have ever had the pleasure of knowing. Happy birthday.</p>
+            <p style="font-family:'Space Grotesk',sans-serif;font-size:16px;line-height:1.85;color:#d6d5d2;margin-bottom:20px;">Remember when we were talking about your birthday, and I said it will always be a big deal to me, because without it, I would not have you. I meant every word. It has not been all smooth sailing, but you make it worth it. You have held my hand, wiped my tears, supported me, pushed me, laughed with me, and been there for me. I cannot put into words how much I love, appreciate, and respect you. Thank you, Divine.</p>
+            <p style="font-family:'Space Grotesk',sans-serif;font-size:16px;line-height:1.85;color:#d6d5d2;margin-bottom:28px;">I love you. I pray this new age comes with more blessings, growth, opportunities, prosperity, happiness, joy, peace of mind, and every good thing life has to offer. I still pray Psalms 44 and 100 for you every chance I get. And I want you to know, you are my Philippians 1:13.</p>
+            <p style="font-family:'Chakra Petch',sans-serif;font-size:18px;font-weight:600;color:#e7e6e3;margin-bottom:4px;">Happy birthday once more, my best friend.</p>
+            <p style="font-family:'Chakra Petch',sans-serif;font-size:15px;color:#e8792e;letter-spacing:1px;">A thousand years, a fight. ♦</p>
+          </div>
+          <a href="games.html" style="display:inline-block;margin-top:38px;text-decoration:none;font-family:'Chakra Petch',sans-serif;font-weight:600;font-size:15px;letter-spacing:1px;color:#070608;background:#e8792e;padding:15px 30px;border-radius:12px;box-shadow:0 0 30px rgba(232,121,46,0.4);">Enter the Arcade →</a>
+        </div>
+      </section>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:860},&quot;message&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Content&quot;}}">
+class Component extends DCLogic {
+  state = { now: new Date(), unlocked: false, taps: 0 };
+  _fw = []; _embers = [];
+
+  componentDidMount() {
+    this._t = setInterval(() => {
+      this.setState({ now: new Date() });
+      if (this.isPartyNow()) this.goParty();
+    }, 1000);
+    if (this.isPartyNow()) this.goParty();
+    else this.startEmbers();
+  }
+  componentWillUnmount() { clearInterval(this._t); if (this._anim) cancelAnimationFrame(this._anim); removeEventListener("resize",this._onR); }
+
+  isPartyNow() {
+    const n = this.state.now;
+    return this.state.unlocked || (n.getMonth() === 6 && n.getDate() === 1);
+  }
+
+  goParty(){
+    if (this._party) return;
+    this._party = true;
+    clearInterval(this._t);            // stop per-second re-render so entrance anims run clean
+    if (this._anim) cancelAnimationFrame(this._anim);
+    this._embers = [];
+    setTimeout(()=>this.startFireworks(), 60);
+  }
+
+  setupCanvas(){
+    const cv=this._fx; if(!cv) return null;
+    const ctx=cv.getContext("2d"); const dpr=window.devicePixelRatio||1;
+    const resize=()=>{ cv.width=innerWidth*dpr; cv.height=innerHeight*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); };
+    resize(); this._onR=resize; addEventListener("resize",resize);
+    return ctx;
+  }
+
+  startEmbers(){
+    const ctx=this.setupCanvas(); if(!ctx) return;
+    for(let i=0;i<60;i++) this._embers.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:0.6+Math.random()*2,sp:0.2+Math.random()*0.8,a:0.1+Math.random()*0.5,ph:Math.random()*6});
+    const tick=()=>{
+      ctx.clearRect(0,0,innerWidth,innerHeight);
+      for(const e of this._embers){ e.y-=e.sp; e.ph+=0.02; if(e.y<-10){e.y=innerHeight+10;e.x=Math.random()*innerWidth;}
+        ctx.globalAlpha=e.a*(0.5+0.5*Math.sin(e.ph)); ctx.fillStyle=Math.random()>0.5?"#e8792e":"#ffb56b";
+        ctx.beginPath(); ctx.arc(e.x+Math.sin(e.ph)*6,e.y,e.r,0,7); ctx.fill(); }
+      ctx.globalAlpha=1;
+      if(!this._party) this._anim=requestAnimationFrame(tick);
+    };
+    this._anim=requestAnimationFrame(tick);
+  }
+
+  startFireworks() {
+    const ctx=this.setupCanvas(); if(!ctx) return;
+    const colors=["#e8792e","#ffd27a","#56c8d6","#ffffff","#d44a6a"];
+    const launch=()=>{
+      const x=Math.random()*innerWidth, y=Math.random()*innerHeight*0.55+60;
+      const c=colors[(Math.random()*colors.length)|0], n=42+(Math.random()*24|0);
+      for(let i=0;i<n;i++){ const a=(Math.PI*2*i)/n, sp=1.8+Math.random()*3.6;
+        this._fw.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:1,c,tr:[]}); }
+    };
+    let last=0;
+    const tick=(ts)=>{
+      if(ts-last>560){ launch(); last=ts; }
+      ctx.fillStyle="rgba(7,6,8,0.16)"; ctx.fillRect(0,0,innerWidth,innerHeight);
+      for(const p of this._fw){ p.x+=p.vx; p.y+=p.vy; p.vy+=0.028; p.vx*=0.992; p.life-=0.011;
+        ctx.globalAlpha=Math.max(0,p.life); ctx.fillStyle=p.c;
+        ctx.beginPath(); ctx.arc(p.x,p.y,2.2,0,7); ctx.fill(); }
+      ctx.globalAlpha=1; this._fw=this._fw.filter(p=>p.life>0);
+      this._anim=requestAnimationFrame(tick);
+    };
+    this._anim=requestAnimationFrame(tick);
+  }
+
+  onSecretTap = () => {
+    const t=this.state.taps+1;
+    if (t>=5) { this.setState({ unlocked:true, taps:t }); this.goParty(); }
+    else this.setState({ taps:t });
+  };
+
+  renderVals() {
+    const now=this.state.now;
+    const target=new Date(2026,6,1,0,0,0);
+    const diff=Math.max(0,target-now);
+    const d=Math.floor(diff/86400000),h=Math.floor((diff%86400000)/3600000),m=Math.floor((diff%3600000)/60000),s=Math.floor((diff%60000)/1000);
+    const pad=(n)=>String(n).padStart(2,"0");
+    const party=this.isPartyNow();
+    return {
+      fxRef:(el)=>{ this._fx=el; },
+      isCountdown:!party, isParty:party,
+      countParts:[{val:pad(d),label:"DAYS"},{val:pad(h),label:"HOURS"},{val:pad(m),label:"MINUTES"},{val:pad(s),label:"SECONDS"}],
+      onSecretTap:this.onSecretTap,
+      showHint:this.state.taps>0,
+      tapHint:this.state.taps>=5?"unlocked":"·".repeat(this.state.taps),
+      message:this.props.message ?? "Of every person I could've built a whole world for, it was always going to be you. You're the most competitive, loyal, ridiculous, clutch human I know — and somehow also the softest when it counts. Happy birthday. This is all yours.",
+    };
+  }
+}
+</script>
+</body>
+</html>
